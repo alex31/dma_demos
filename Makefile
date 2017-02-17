@@ -273,3 +273,7 @@ stflash: all
 	/usr/local/bin/st-flash write  $(BUILDDIR)/$(PROJECT).bin 0x08000000
 	@echo Done
 
+flash: all
+	@echo write $(BUILDDIR)/$(PROJECT).bin to flash memory
+	bmpflash  $(BUILDDIR)/$(PROJECT).elf
+	@echo Done

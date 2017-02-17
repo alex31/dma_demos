@@ -17,7 +17,7 @@ BaseSequentialStream *chp = (BaseSequentialStream *) &SD2;
 
 
 
-const uint8_t *UniqProcessorId = (uint8_t *) 0x1FFF7A10;
+const uint8_t *UniqProcessorId = (uint8_t *) 0x1FFF7590;
 const uint8_t UniqProcessorIdLen = 12;
 
 /*
