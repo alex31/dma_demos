@@ -261,7 +261,7 @@ ULIBS =
 
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC
 include $(RULESPATH)/rules.mk
-PRE_MAKE_ALL_RULE_HOOK: local/$(BOARD)/board.h
+$(OBJS): local/$(BOARD)/board.h
 
 
 local/$(BOARD)/board.h: local/$(BOARD)/board.cfg

@@ -17,14 +17,16 @@
 /*===========================================================================*/
 
 
-static void cmd_mem(BaseSequentialStream *lchp, int argc,const char * const argv[]);
-static void cmd_threads(BaseSequentialStream *lchp, int argc,const char * const argv[]);
-static void cmd_uid(BaseSequentialStream *lchp, int argc,const char * const argv[]);
+static void cmd_mem (BaseSequentialStream *lchp, int argc,const char * const argv[]);
+static void cmd_threads (BaseSequentialStream *lchp, int argc,const char * const argv[]);
+static void cmd_uid (BaseSequentialStream *lchp, int argc,const char * const argv[]);
+static void cmd_shutdown (BaseSequentialStream *lchp, int argc,const char * const argv[]);
 
 static const ShellCommand commands[] = {
   {"mem", cmd_mem},
   {"threads", cmd_threads},
   {"uid", cmd_uid},
+  {"shutdown", cmd_shutdown},
   {NULL, NULL}
 };
 
@@ -84,6 +86,15 @@ static void cmd_uid(BaseSequentialStream *lchp, int argc,const char * const argv
 }
 
 
+static void cmd_shutdown(BaseSequentialStream *lchp, int argc,const char * const argv[]) {
+  (void)lchp;
+  (void)argc;
+  (void)argv;
+
+  systemDeepSleep();
+}
+
+
 static void cmd_mem(BaseSequentialStream *lchp, int argc,const char * const argv[]) {
   (void)argv;
   if (argc > 0) {
@@ -97,7 +108,7 @@ static void cmd_mem(BaseSequentialStream *lchp, int argc,const char * const argv
   void * ptr1 = malloc_m (100);
   void * ptr2 = malloc_m (100);
 
-  chprintf (lchp, "(2x) malloc_m(1000) = 0x%x ;; 0x%x\r\n", ptr1, ptr2);
+  chprintf (lchp, "(2x) malloc_m(1000) = %p ;; %p\r\n", ptr1, ptr2);
   chprintf (lchp, "heap free memory : %d bytes\r\n", getHeapFree());
 
   free_m (ptr1);
@@ -139,7 +150,7 @@ static void cmd_threads(BaseSequentialStream *lchp, int argc,const char * const 
 
   const float idlePercent = (idleTicks*100.f)/totalTicks;
   const float cpuPercent = 100.f - idlePercent;
-  chprintf (lchp, "\r\ncpu load = %.2f\%\r\n", cpuPercent);
+  chprintf (lchp, "\r\ncpu load = %.2f %%\r\n", cpuPercent);
 }
 
 
