@@ -110,13 +110,13 @@ PROJECT = ch
 BOARD = NUCLEO432
 
 # Imported source files and paths
-MY_DIRNAME=../../../ChibiOS_next
+MY_DIRNAME=../../../ChibiOS_stable
 ifneq "$(wildcard $(MY_DIRNAME) )" ""
    RELATIVE=../../..
 else
   RELATIVE=../..
 endif
-CHIBIOS = $(RELATIVE)/ChibiOS_next
+CHIBIOS = $(RELATIVE)/ChibiOS_stable
 STMSRC = $(RELATIVE)/COMMON/stm
 VARIOUS = $(RELATIVE)/COMMON/various
 USBD_LIB = $(VARIOUS)/Chibios-USB-Devices
