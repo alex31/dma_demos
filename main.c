@@ -33,8 +33,8 @@ static void blinker (void *arg)
   int prendDeLaPlaceSurLaPile[40] __attribute__((unused)); 
   
   while (true) { 
-    palToggleLine (LINE_B03_LED_GREEN); 	
-    chThdSleepMilliseconds (1000);
+    palToggleLine (LINE_A05_LED_GREEN); 	
+    chThdSleepMilliseconds (100);
   }
 }
 

@@ -27,7 +27,7 @@ Token is word separate by white space, for example 3 token line:
 Define you prompt string here. You can use colors escape code, for highlight you prompt,
 for example this prompt will green color (if you terminal supports color)*/
 //#define _PROMPT_DEFAUTL "\033[32mIRin >\033[0m "	// green color
-#define _PROMPT_DEFAUTL "\033[32mNucleo_l432 >\033[0m "	// green color
+#define _PROMPT_DEFAUTL "\033[32mNucleo_l476 >\033[0m "	// green color
 //#define _PROMPT_DEFAUTL "IRin > "
 
 /*
