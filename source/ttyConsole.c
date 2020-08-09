@@ -7,7 +7,6 @@
 #include "microrl/microrlShell.h"
 #include "ttyConsole.h"
 #include "stdutil.h"
-#include "globalVar.h"
 #include "printf.h"
 #include "portage.h"
 
