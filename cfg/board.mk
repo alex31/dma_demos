@@ -1,8 +1,8 @@
 # Required include directories
-BOARDINC = $(CONFDIR)/cfg
+BOARDINC = cfg
 
 # List of all the board related files.
-BOARDSRC = $(CONFDIR)/board.c
+BOARDSRC = ${BOARDINC}/board.c
 
 # Shared variables
 ALLCSRC += $(BOARDSRC)

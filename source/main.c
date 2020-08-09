@@ -6,7 +6,7 @@
 
 
 /*
-  Utiliser une nucleo L476
+  Utiliser une nucleo DEVBOARDM4
  */
 
 
@@ -20,7 +20,7 @@ static void blinker (void *arg)
   chRegSetThreadName("blinker");
   
   while (true) { 
-    palToggleLine(LINE_A05_LED_GREEN); 	
+    palToggleLine(LINE_LED1); 	
     chThdSleepMilliseconds(100);
   }
 }

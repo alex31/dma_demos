@@ -16,16 +16,11 @@
 
 #pragma once
 
-
-/*
- * Setup for STMicroelectronics STM32 Nucleo32-L476RG board.
- */
-
 /*
  * Board identifier.
  */
-#define BOARD_ST_NUCLEO64_L476RG
-#define BOARD_NAME                  "STMicroelectronics STM32 Nucleo64-L476RG"
+#define BOARD_DEVBOARDM4
+#define BOARD_NAME                  "DevboardM4 V2"
 
 /*
  * Board oscillators-related settings.
@@ -34,13 +29,9 @@
 #define STM32_LSECLK                32768U
 #endif
 
-#define STM32_LSEDRV                (3U << 3U)
-
 #if !defined(STM32_HSECLK)
-#define STM32_HSECLK                8000000U
+#define STM32_HSECLK                16000000U
 #endif
-
-#define STM32_HSE_BYPASS
 
 /*
  * Board voltages.
@@ -51,20 +42,18 @@
 /*
  * MCU type as defined in the ST header.
  */
-#define STM32L476xx
+#define STM32F407xx
 
-/*
- * IO pins assignments.
- */
+
 /*
  * IO pins assignments.
  */
 #define	PA00                           0U
 #define	PA01                           1U
-#define	PA02_VCP_TX                    2U
-#define	PA03_VCP_RX                    3U
+#define	PA02                           2U
+#define	PA03                           3U
 #define	PA04                           4U
-#define	PA05_LED_GREEN                 5U
+#define	PA05                           5U
 #define	PA06                           6U
 #define	PA07                           7U
 #define	PA08                           8U
@@ -82,8 +71,8 @@
 #define	PB03                           3U
 #define	PB04                           4U
 #define	PB05                           5U
-#define	PB06                           6U
-#define	PB07                           7U
+#define	PB06_SHELL_TX                  6U
+#define	PB07_SHELL_RX                  7U
 #define	PB08                           8U
 #define	PB09                           9U
 #define	PB10                           10U
@@ -93,7 +82,7 @@
 #define	PB14                           14U
 #define	PB15                           15U
 
-#define	PC00                           0U
+#define	PC00_LED1                      0U
 #define	PC01                           1U
 #define	PC02                           2U
 #define	PC03                           3U
@@ -107,8 +96,8 @@
 #define	PC11                           11U
 #define	PC12                           12U
 #define	PC13                           13U
-#define	PC14_RCC_OSC32_IN              14U
-#define	PC15_RCC_OSC32_OUT             15U
+#define	PC14_OSC32_IN                  14U
+#define	PC15_OSC32_OUT                 15U
 
 #define	PD00                           0U
 #define	PD01                           1U
@@ -126,23 +115,6 @@
 #define	PD13                           13U
 #define	PD14                           14U
 #define	PD15                           15U
-
-#define	PH00                           0U
-#define	PH01                           1U
-#define	PH02                           2U
-#define	PH03                           3U
-#define	PH04                           4U
-#define	PH05                           5U
-#define	PH06                           6U
-#define	PH07                           7U
-#define	PH08                           8U
-#define	PH09                           9U
-#define	PH10                           10U
-#define	PH11                           11U
-#define	PH12                           12U
-#define	PH13                           13U
-#define	PH14                           14U
-#define	PH15                           15U
 
 #define	PE00                           0U
 #define	PE01                           1U
@@ -195,17 +167,89 @@
 #define	PG14                           14U
 #define	PG15                           15U
 
+#define	PH00_OSC_IN                    0U
+#define	PH01_OSC_OUT                   1U
+#define	PH02                           2U
+#define	PH03                           3U
+#define	PH04                           4U
+#define	PH05                           5U
+#define	PH06                           6U
+#define	PH07                           7U
+#define	PH08                           8U
+#define	PH09                           9U
+#define	PH10                           10U
+#define	PH11                           11U
+#define	PH12                           12U
+#define	PH13                           13U
+#define	PH14                           14U
+#define	PH15                           15U
+
+#define	PI00                           0U
+#define	PI01                           1U
+#define	PI02                           2U
+#define	PI03                           3U
+#define	PI04                           4U
+#define	PI05                           5U
+#define	PI06                           6U
+#define	PI07                           7U
+#define	PI08                           8U
+#define	PI09                           9U
+#define	PI10                           10U
+#define	PI11                           11U
+#define	PI12                           12U
+#define	PI13                           13U
+#define	PI14                           14U
+#define	PI15                           15U
+
+#define	PJ00                           0U
+#define	PJ01                           1U
+#define	PJ02                           2U
+#define	PJ03                           3U
+#define	PJ04                           4U
+#define	PJ05                           5U
+#define	PJ06                           6U
+#define	PJ07                           7U
+#define	PJ08                           8U
+#define	PJ09                           9U
+#define	PJ10                           10U
+#define	PJ11                           11U
+#define	PJ12                           12U
+#define	PJ13                           13U
+#define	PJ14                           14U
+#define	PJ15                           15U
+
+#define	PK00                           0U
+#define	PK01                           1U
+#define	PK02                           2U
+#define	PK03                           3U
+#define	PK04                           4U
+#define	PK05                           5U
+#define	PK06                           6U
+#define	PK07                           7U
+#define	PK08                           8U
+#define	PK09                           9U
+#define	PK10                           10U
+#define	PK11                           11U
+#define	PK12                           12U
+#define	PK13                           13U
+#define	PK14                           14U
+#define	PK15                           15U
+
 /*
  * IO lines assignments.
  */
-#define	LINE_A02_VCP_TX                PAL_LINE(GPIOA, 2U)
-#define	LINE_A03_VCP_RX                PAL_LINE(GPIOA, 3U)
-#define	LINE_A05_LED_GREEN             PAL_LINE(GPIOA, 5U)
-#define	LINE_A13_SWDIO                 PAL_LINE(GPIOA, 13U)
-#define	LINE_A14_SWCLK                 PAL_LINE(GPIOA, 14U)
+#define	LINE_SWDIO                     PAL_LINE(GPIOA, 13U)
+#define	LINE_SWCLK                     PAL_LINE(GPIOA, 14U)
 
-#define	LINE_C14_RCC_OSC32_IN          PAL_LINE(GPIOC, 14U)
-#define	LINE_C15_RCC_OSC32_OUT         PAL_LINE(GPIOC, 15U)
+#define	LINE_SHELL_TX                  PAL_LINE(GPIOB, 6U)
+#define	LINE_SHELL_RX                  PAL_LINE(GPIOB, 7U)
+
+#define	LINE_LED1                      PAL_LINE(GPIOC, 0U)
+#define	LINE_OSC32_IN                  PAL_LINE(GPIOC, 14U)
+#define	LINE_OSC32_OUT                 PAL_LINE(GPIOC, 15U)
+
+#define	LINE_OSC_IN                    PAL_LINE(GPIOH, 0U)
+#define	LINE_OSC_OUT                   PAL_LINE(GPIOH, 1U)
 
 
 /*
@@ -230,34 +274,29 @@
 #define PIN_PUPDR_PULLDOWN(n)       (2U << ((n) * 2U))
 #define PIN_AFIO_AF(n, v)           ((v) << (((n) % 8U) * 4U))
 
-#define PIN_ASCR_DISABLED(n)        (0U << (n))
-#define PIN_ASCR_ENABLED(n)         (1U << (n))
-#define PIN_LOCKR_DISABLED(n)       (0U << (n))
-#define PIN_LOCKR_ENABLED(n)        (1U << (n))
-
-#define VAL_GPIOA_MODER                 (PIN_MODE_ANALOG(PA00) | \
-					 PIN_MODE_ANALOG(PA01) | \
-					 PIN_MODE_ALTERNATE(PA02_VCP_TX) | \
-					 PIN_MODE_ALTERNATE(PA03_VCP_RX) | \
-					 PIN_MODE_ANALOG(PA04) | \
-					 PIN_MODE_OUTPUT(PA05_LED_GREEN) | \
-					 PIN_MODE_ANALOG(PA06) | \
-					 PIN_MODE_ANALOG(PA07) | \
-					 PIN_MODE_ANALOG(PA08) | \
-					 PIN_MODE_ANALOG(PA09) | \
-					 PIN_MODE_ANALOG(PA10) | \
-					 PIN_MODE_ANALOG(PA11) | \
-					 PIN_MODE_ANALOG(PA12) | \
+#define VAL_GPIOA_MODER                 (PIN_MODE_INPUT(PA00) | \
+					 PIN_MODE_INPUT(PA01) | \
+					 PIN_MODE_INPUT(PA02) | \
+					 PIN_MODE_INPUT(PA03) | \
+					 PIN_MODE_INPUT(PA04) | \
+					 PIN_MODE_INPUT(PA05) | \
+					 PIN_MODE_INPUT(PA06) | \
+					 PIN_MODE_INPUT(PA07) | \
+					 PIN_MODE_INPUT(PA08) | \
+					 PIN_MODE_INPUT(PA09) | \
+					 PIN_MODE_INPUT(PA10) | \
+					 PIN_MODE_INPUT(PA11) | \
+					 PIN_MODE_INPUT(PA12) | \
 					 PIN_MODE_ALTERNATE(PA13_SWDIO) | \
 					 PIN_MODE_ALTERNATE(PA14_SWCLK) | \
-					 PIN_MODE_ANALOG(PA15))
+					 PIN_MODE_INPUT(PA15))
 
 #define VAL_GPIOA_OTYPER                (PIN_OTYPE_PUSHPULL(PA00) | \
 					 PIN_OTYPE_PUSHPULL(PA01) | \
-					 PIN_OTYPE_PUSHPULL(PA02_VCP_TX) | \
-					 PIN_OTYPE_PUSHPULL(PA03_VCP_RX) | \
+					 PIN_OTYPE_PUSHPULL(PA02) | \
+					 PIN_OTYPE_PUSHPULL(PA03) | \
 					 PIN_OTYPE_PUSHPULL(PA04) | \
-					 PIN_OTYPE_PUSHPULL(PA05_LED_GREEN) | \
+					 PIN_OTYPE_PUSHPULL(PA05) | \
 					 PIN_OTYPE_PUSHPULL(PA06) | \
 					 PIN_OTYPE_PUSHPULL(PA07) | \
 					 PIN_OTYPE_PUSHPULL(PA08) | \
@@ -271,10 +310,10 @@
 
 #define VAL_GPIOA_OSPEEDR               (PIN_OSPEED_SPEED_VERYLOW(PA00) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PA01) | \
-					 PIN_OSPEED_SPEED_HIGH(PA02_VCP_TX) | \
-					 PIN_OSPEED_SPEED_HIGH(PA03_VCP_RX) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PA02) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PA03) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PA04) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PA05_LED_GREEN) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PA05) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PA06) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PA07) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PA08) | \
@@ -286,46 +325,46 @@
 					 PIN_OSPEED_SPEED_HIGH(PA14_SWCLK) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PA15))
 
-#define VAL_GPIOA_PUPDR                 (PIN_PUPDR_FLOATING(PA00) | \
-					 PIN_PUPDR_FLOATING(PA01) | \
-					 PIN_PUPDR_FLOATING(PA02_VCP_TX) | \
-					 PIN_PUPDR_FLOATING(PA03_VCP_RX) | \
-					 PIN_PUPDR_FLOATING(PA04) | \
-					 PIN_PUPDR_FLOATING(PA05_LED_GREEN) | \
-					 PIN_PUPDR_FLOATING(PA06) | \
-					 PIN_PUPDR_FLOATING(PA07) | \
-					 PIN_PUPDR_FLOATING(PA08) | \
-					 PIN_PUPDR_FLOATING(PA09) | \
-					 PIN_PUPDR_FLOATING(PA10) | \
-					 PIN_PUPDR_FLOATING(PA11) | \
-					 PIN_PUPDR_FLOATING(PA12) | \
-					 PIN_PUPDR_PULLUP(PA13_SWDIO) | \
-					 PIN_PUPDR_PULLUP(PA14_SWCLK) | \
-					 PIN_PUPDR_FLOATING(PA15))
+#define VAL_GPIOA_PUPDR                 (PIN_PUPDR_PULLDOWN(PA00) | \
+					 PIN_PUPDR_PULLDOWN(PA01) | \
+					 PIN_PUPDR_PULLDOWN(PA02) | \
+					 PIN_PUPDR_PULLDOWN(PA03) | \
+					 PIN_PUPDR_PULLDOWN(PA04) | \
+					 PIN_PUPDR_PULLDOWN(PA05) | \
+					 PIN_PUPDR_PULLDOWN(PA06) | \
+					 PIN_PUPDR_PULLDOWN(PA07) | \
+					 PIN_PUPDR_PULLDOWN(PA08) | \
+					 PIN_PUPDR_PULLDOWN(PA09) | \
+					 PIN_PUPDR_PULLDOWN(PA10) | \
+					 PIN_PUPDR_PULLDOWN(PA11) | \
+					 PIN_PUPDR_PULLDOWN(PA12) | \
+					 PIN_PUPDR_FLOATING(PA13_SWDIO) | \
+					 PIN_PUPDR_FLOATING(PA14_SWCLK) | \
+					 PIN_PUPDR_PULLDOWN(PA15))
 
-#define VAL_GPIOA_ODR                   (PIN_ODR_LEVEL_HIGH(PA00) | \
-					 PIN_ODR_LEVEL_HIGH(PA01) | \
-					 PIN_ODR_LEVEL_HIGH(PA02_VCP_TX) | \
-					 PIN_ODR_LEVEL_HIGH(PA03_VCP_RX) | \
-					 PIN_ODR_LEVEL_HIGH(PA04) | \
-					 PIN_ODR_LEVEL_LOW(PA05_LED_GREEN) | \
-					 PIN_ODR_LEVEL_HIGH(PA06) | \
-					 PIN_ODR_LEVEL_HIGH(PA07) | \
-					 PIN_ODR_LEVEL_HIGH(PA08) | \
-					 PIN_ODR_LEVEL_HIGH(PA09) | \
-					 PIN_ODR_LEVEL_HIGH(PA10) | \
-					 PIN_ODR_LEVEL_HIGH(PA11) | \
-					 PIN_ODR_LEVEL_HIGH(PA12) | \
+#define VAL_GPIOA_ODR                   (PIN_ODR_LEVEL_LOW(PA00) | \
+					 PIN_ODR_LEVEL_LOW(PA01) | \
+					 PIN_ODR_LEVEL_LOW(PA02) | \
+					 PIN_ODR_LEVEL_LOW(PA03) | \
+					 PIN_ODR_LEVEL_LOW(PA04) | \
+					 PIN_ODR_LEVEL_LOW(PA05) | \
+					 PIN_ODR_LEVEL_LOW(PA06) | \
+					 PIN_ODR_LEVEL_LOW(PA07) | \
+					 PIN_ODR_LEVEL_LOW(PA08) | \
+					 PIN_ODR_LEVEL_LOW(PA09) | \
+					 PIN_ODR_LEVEL_LOW(PA10) | \
+					 PIN_ODR_LEVEL_LOW(PA11) | \
+					 PIN_ODR_LEVEL_LOW(PA12) | \
 					 PIN_ODR_LEVEL_HIGH(PA13_SWDIO) | \
 					 PIN_ODR_LEVEL_HIGH(PA14_SWCLK) | \
-					 PIN_ODR_LEVEL_HIGH(PA15))
+					 PIN_ODR_LEVEL_LOW(PA15))
 
 #define VAL_GPIOA_AFRL			(PIN_AFIO_AF(PA00, 0) | \
 					 PIN_AFIO_AF(PA01, 0) | \
-					 PIN_AFIO_AF(PA02_VCP_TX, 7) | \
-					 PIN_AFIO_AF(PA03_VCP_RX, 7) | \
+					 PIN_AFIO_AF(PA02, 0) | \
+					 PIN_AFIO_AF(PA03, 0) | \
 					 PIN_AFIO_AF(PA04, 0) | \
-					 PIN_AFIO_AF(PA05_LED_GREEN, 0) | \
+					 PIN_AFIO_AF(PA05, 0) | \
 					 PIN_AFIO_AF(PA06, 0) | \
 					 PIN_AFIO_AF(PA07, 0))
 
@@ -338,56 +377,22 @@
 					 PIN_AFIO_AF(PA14_SWCLK, 0) | \
 					 PIN_AFIO_AF(PA15, 0))
 
-#define VAL_GPIOA_ASCR                  (PIN_ASCR_DISABLED(PA00) | \
-					 PIN_ASCR_DISABLED(PA01) | \
-					 PIN_ASCR_DISABLED(PA02_VCP_TX) | \
-					 PIN_ASCR_DISABLED(PA03_VCP_RX) | \
-					 PIN_ASCR_DISABLED(PA04) | \
-					 PIN_ASCR_DISABLED(PA05_LED_GREEN) | \
-					 PIN_ASCR_DISABLED(PA06) | \
-					 PIN_ASCR_DISABLED(PA07) | \
-					 PIN_ASCR_DISABLED(PA08) | \
-					 PIN_ASCR_DISABLED(PA09) | \
-					 PIN_ASCR_DISABLED(PA10) | \
-					 PIN_ASCR_DISABLED(PA11) | \
-					 PIN_ASCR_DISABLED(PA12) | \
-					 PIN_ASCR_DISABLED(PA13_SWDIO) | \
-					 PIN_ASCR_DISABLED(PA14_SWCLK) | \
-					 PIN_ASCR_DISABLED(PA15))
-
-#define VAL_GPIOA_LOCKR                 (PIN_LOCKR_DISABLED(PA00) | \
-					 PIN_LOCKR_DISABLED(PA01) | \
-					 PIN_LOCKR_DISABLED(PA02_VCP_TX) | \
-					 PIN_LOCKR_DISABLED(PA03_VCP_RX) | \
-					 PIN_LOCKR_DISABLED(PA04) | \
-					 PIN_LOCKR_DISABLED(PA05_LED_GREEN) | \
-					 PIN_LOCKR_DISABLED(PA06) | \
-					 PIN_LOCKR_DISABLED(PA07) | \
-					 PIN_LOCKR_DISABLED(PA08) | \
-					 PIN_LOCKR_DISABLED(PA09) | \
-					 PIN_LOCKR_DISABLED(PA10) | \
-					 PIN_LOCKR_DISABLED(PA11) | \
-					 PIN_LOCKR_DISABLED(PA12) | \
-					 PIN_LOCKR_DISABLED(PA13_SWDIO) | \
-					 PIN_LOCKR_DISABLED(PA14_SWCLK) | \
-					 PIN_LOCKR_DISABLED(PA15))
-
-#define VAL_GPIOB_MODER                 (PIN_MODE_ANALOG(PB00) | \
-					 PIN_MODE_ANALOG(PB01) | \
-					 PIN_MODE_ANALOG(PB02) | \
-					 PIN_MODE_ANALOG(PB03) | \
-					 PIN_MODE_ANALOG(PB04) | \
-					 PIN_MODE_ANALOG(PB05) | \
-					 PIN_MODE_ANALOG(PB06) | \
-					 PIN_MODE_ANALOG(PB07) | \
-					 PIN_MODE_ANALOG(PB08) | \
-					 PIN_MODE_ANALOG(PB09) | \
-					 PIN_MODE_ANALOG(PB10) | \
-					 PIN_MODE_ANALOG(PB11) | \
-					 PIN_MODE_ANALOG(PB12) | \
-					 PIN_MODE_ANALOG(PB13) | \
-					 PIN_MODE_ANALOG(PB14) | \
-					 PIN_MODE_ANALOG(PB15))
+#define VAL_GPIOB_MODER                 (PIN_MODE_INPUT(PB00) | \
+					 PIN_MODE_INPUT(PB01) | \
+					 PIN_MODE_INPUT(PB02) | \
+					 PIN_MODE_INPUT(PB03) | \
+					 PIN_MODE_INPUT(PB04) | \
+					 PIN_MODE_INPUT(PB05) | \
+					 PIN_MODE_ALTERNATE(PB06_SHELL_TX) | \
+					 PIN_MODE_ALTERNATE(PB07_SHELL_RX) | \
+					 PIN_MODE_INPUT(PB08) | \
+					 PIN_MODE_INPUT(PB09) | \
+					 PIN_MODE_INPUT(PB10) | \
+					 PIN_MODE_INPUT(PB11) | \
+					 PIN_MODE_INPUT(PB12) | \
+					 PIN_MODE_INPUT(PB13) | \
+					 PIN_MODE_INPUT(PB14) | \
+					 PIN_MODE_INPUT(PB15))
 
 #define VAL_GPIOB_OTYPER                (PIN_OTYPE_PUSHPULL(PB00) | \
 					 PIN_OTYPE_PUSHPULL(PB01) | \
@@ -395,8 +400,8 @@
 					 PIN_OTYPE_PUSHPULL(PB03) | \
 					 PIN_OTYPE_PUSHPULL(PB04) | \
 					 PIN_OTYPE_PUSHPULL(PB05) | \
-					 PIN_OTYPE_PUSHPULL(PB06) | \
-					 PIN_OTYPE_PUSHPULL(PB07) | \
+					 PIN_OTYPE_PUSHPULL(PB06_SHELL_TX) | \
+					 PIN_OTYPE_PUSHPULL(PB07_SHELL_RX) | \
 					 PIN_OTYPE_PUSHPULL(PB08) | \
 					 PIN_OTYPE_PUSHPULL(PB09) | \
 					 PIN_OTYPE_PUSHPULL(PB10) | \
@@ -412,8 +417,8 @@
 					 PIN_OSPEED_SPEED_VERYLOW(PB03) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PB04) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PB05) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PB06) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PB07) | \
+					 PIN_OSPEED_SPEED_HIGH(PB06_SHELL_TX) | \
+					 PIN_OSPEED_SPEED_HIGH(PB07_SHELL_RX) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PB08) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PB09) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PB10) | \
@@ -423,39 +428,39 @@
 					 PIN_OSPEED_SPEED_VERYLOW(PB14) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PB15))
 
-#define VAL_GPIOB_PUPDR                 (PIN_PUPDR_FLOATING(PB00) | \
-					 PIN_PUPDR_FLOATING(PB01) | \
-					 PIN_PUPDR_FLOATING(PB02) | \
-					 PIN_PUPDR_FLOATING(PB03) | \
-					 PIN_PUPDR_FLOATING(PB04) | \
-					 PIN_PUPDR_FLOATING(PB05) | \
-					 PIN_PUPDR_FLOATING(PB06) | \
-					 PIN_PUPDR_FLOATING(PB07) | \
-					 PIN_PUPDR_FLOATING(PB08) | \
-					 PIN_PUPDR_FLOATING(PB09) | \
-					 PIN_PUPDR_FLOATING(PB10) | \
-					 PIN_PUPDR_FLOATING(PB11) | \
-					 PIN_PUPDR_FLOATING(PB12) | \
-					 PIN_PUPDR_FLOATING(PB13) | \
-					 PIN_PUPDR_FLOATING(PB14) | \
-					 PIN_PUPDR_FLOATING(PB15))
+#define VAL_GPIOB_PUPDR                 (PIN_PUPDR_PULLDOWN(PB00) | \
+					 PIN_PUPDR_PULLDOWN(PB01) | \
+					 PIN_PUPDR_PULLDOWN(PB02) | \
+					 PIN_PUPDR_PULLDOWN(PB03) | \
+					 PIN_PUPDR_PULLDOWN(PB04) | \
+					 PIN_PUPDR_PULLDOWN(PB05) | \
+					 PIN_PUPDR_FLOATING(PB06_SHELL_TX) | \
+					 PIN_PUPDR_FLOATING(PB07_SHELL_RX) | \
+					 PIN_PUPDR_PULLDOWN(PB08) | \
+					 PIN_PUPDR_PULLDOWN(PB09) | \
+					 PIN_PUPDR_PULLDOWN(PB10) | \
+					 PIN_PUPDR_PULLDOWN(PB11) | \
+					 PIN_PUPDR_PULLDOWN(PB12) | \
+					 PIN_PUPDR_PULLDOWN(PB13) | \
+					 PIN_PUPDR_PULLDOWN(PB14) | \
+					 PIN_PUPDR_PULLDOWN(PB15))
 
-#define VAL_GPIOB_ODR                   (PIN_ODR_LEVEL_HIGH(PB00) | \
-					 PIN_ODR_LEVEL_HIGH(PB01) | \
-					 PIN_ODR_LEVEL_HIGH(PB02) | \
-					 PIN_ODR_LEVEL_HIGH(PB03) | \
-					 PIN_ODR_LEVEL_HIGH(PB04) | \
-					 PIN_ODR_LEVEL_HIGH(PB05) | \
-					 PIN_ODR_LEVEL_HIGH(PB06) | \
-					 PIN_ODR_LEVEL_HIGH(PB07) | \
-					 PIN_ODR_LEVEL_HIGH(PB08) | \
-					 PIN_ODR_LEVEL_HIGH(PB09) | \
-					 PIN_ODR_LEVEL_HIGH(PB10) | \
-					 PIN_ODR_LEVEL_HIGH(PB11) | \
-					 PIN_ODR_LEVEL_HIGH(PB12) | \
-					 PIN_ODR_LEVEL_HIGH(PB13) | \
-					 PIN_ODR_LEVEL_HIGH(PB14) | \
-					 PIN_ODR_LEVEL_HIGH(PB15))
+#define VAL_GPIOB_ODR                   (PIN_ODR_LEVEL_LOW(PB00) | \
+					 PIN_ODR_LEVEL_LOW(PB01) | \
+					 PIN_ODR_LEVEL_LOW(PB02) | \
+					 PIN_ODR_LEVEL_LOW(PB03) | \
+					 PIN_ODR_LEVEL_LOW(PB04) | \
+					 PIN_ODR_LEVEL_LOW(PB05) | \
+					 PIN_ODR_LEVEL_HIGH(PB06_SHELL_TX) | \
+					 PIN_ODR_LEVEL_HIGH(PB07_SHELL_RX) | \
+					 PIN_ODR_LEVEL_LOW(PB08) | \
+					 PIN_ODR_LEVEL_LOW(PB09) | \
+					 PIN_ODR_LEVEL_LOW(PB10) | \
+					 PIN_ODR_LEVEL_LOW(PB11) | \
+					 PIN_ODR_LEVEL_LOW(PB12) | \
+					 PIN_ODR_LEVEL_LOW(PB13) | \
+					 PIN_ODR_LEVEL_LOW(PB14) | \
+					 PIN_ODR_LEVEL_LOW(PB15))
 
 #define VAL_GPIOB_AFRL			(PIN_AFIO_AF(PB00, 0) | \
 					 PIN_AFIO_AF(PB01, 0) | \
@@ -463,8 +468,8 @@
 					 PIN_AFIO_AF(PB03, 0) | \
 					 PIN_AFIO_AF(PB04, 0) | \
 					 PIN_AFIO_AF(PB05, 0) | \
-					 PIN_AFIO_AF(PB06, 0) | \
-					 PIN_AFIO_AF(PB07, 0))
+					 PIN_AFIO_AF(PB06_SHELL_TX, 7) | \
+					 PIN_AFIO_AF(PB07_SHELL_RX, 7))
 
 #define VAL_GPIOB_AFRH			(PIN_AFIO_AF(PB08, 0) | \
 					 PIN_AFIO_AF(PB09, 0) | \
@@ -475,58 +480,24 @@
 					 PIN_AFIO_AF(PB14, 0) | \
 					 PIN_AFIO_AF(PB15, 0))
 
-#define VAL_GPIOB_ASCR                  (PIN_ASCR_DISABLED(PB00) | \
-					 PIN_ASCR_DISABLED(PB01) | \
-					 PIN_ASCR_DISABLED(PB02) | \
-					 PIN_ASCR_DISABLED(PB03) | \
-					 PIN_ASCR_DISABLED(PB04) | \
-					 PIN_ASCR_DISABLED(PB05) | \
-					 PIN_ASCR_DISABLED(PB06) | \
-					 PIN_ASCR_DISABLED(PB07) | \
-					 PIN_ASCR_DISABLED(PB08) | \
-					 PIN_ASCR_DISABLED(PB09) | \
-					 PIN_ASCR_DISABLED(PB10) | \
-					 PIN_ASCR_DISABLED(PB11) | \
-					 PIN_ASCR_DISABLED(PB12) | \
-					 PIN_ASCR_DISABLED(PB13) | \
-					 PIN_ASCR_DISABLED(PB14) | \
-					 PIN_ASCR_DISABLED(PB15))
+#define VAL_GPIOC_MODER                 (PIN_MODE_OUTPUT(PC00_LED1) | \
+					 PIN_MODE_INPUT(PC01) | \
+					 PIN_MODE_INPUT(PC02) | \
+					 PIN_MODE_INPUT(PC03) | \
+					 PIN_MODE_INPUT(PC04) | \
+					 PIN_MODE_INPUT(PC05) | \
+					 PIN_MODE_INPUT(PC06) | \
+					 PIN_MODE_INPUT(PC07) | \
+					 PIN_MODE_INPUT(PC08) | \
+					 PIN_MODE_INPUT(PC09) | \
+					 PIN_MODE_INPUT(PC10) | \
+					 PIN_MODE_INPUT(PC11) | \
+					 PIN_MODE_INPUT(PC12) | \
+					 PIN_MODE_INPUT(PC13) | \
+					 PIN_MODE_ALTERNATE(PC14_OSC32_IN) | \
+					 PIN_MODE_ALTERNATE(PC15_OSC32_OUT))
 
-#define VAL_GPIOB_LOCKR                 (PIN_LOCKR_DISABLED(PB00) | \
-					 PIN_LOCKR_DISABLED(PB01) | \
-					 PIN_LOCKR_DISABLED(PB02) | \
-					 PIN_LOCKR_DISABLED(PB03) | \
-					 PIN_LOCKR_DISABLED(PB04) | \
-					 PIN_LOCKR_DISABLED(PB05) | \
-					 PIN_LOCKR_DISABLED(PB06) | \
-					 PIN_LOCKR_DISABLED(PB07) | \
-					 PIN_LOCKR_DISABLED(PB08) | \
-					 PIN_LOCKR_DISABLED(PB09) | \
-					 PIN_LOCKR_DISABLED(PB10) | \
-					 PIN_LOCKR_DISABLED(PB11) | \
-					 PIN_LOCKR_DISABLED(PB12) | \
-					 PIN_LOCKR_DISABLED(PB13) | \
-					 PIN_LOCKR_DISABLED(PB14) | \
-					 PIN_LOCKR_DISABLED(PB15))
-
-#define VAL_GPIOC_MODER                 (PIN_MODE_ANALOG(PC00) | \
-					 PIN_MODE_ANALOG(PC01) | \
-					 PIN_MODE_ANALOG(PC02) | \
-					 PIN_MODE_ANALOG(PC03) | \
-					 PIN_MODE_ANALOG(PC04) | \
-					 PIN_MODE_ANALOG(PC05) | \
-					 PIN_MODE_ANALOG(PC06) | \
-					 PIN_MODE_ANALOG(PC07) | \
-					 PIN_MODE_ANALOG(PC08) | \
-					 PIN_MODE_ANALOG(PC09) | \
-					 PIN_MODE_ANALOG(PC10) | \
-					 PIN_MODE_ANALOG(PC11) | \
-					 PIN_MODE_ANALOG(PC12) | \
-					 PIN_MODE_ANALOG(PC13) | \
-					 PIN_MODE_ALTERNATE(PC14_RCC_OSC32_IN) | \
-					 PIN_MODE_ALTERNATE(PC15_RCC_OSC32_OUT))
-
-#define VAL_GPIOC_OTYPER                (PIN_OTYPE_PUSHPULL(PC00) | \
+#define VAL_GPIOC_OTYPER                (PIN_OTYPE_PUSHPULL(PC00_LED1) | \
 					 PIN_OTYPE_PUSHPULL(PC01) | \
 					 PIN_OTYPE_PUSHPULL(PC02) | \
 					 PIN_OTYPE_PUSHPULL(PC03) | \
@@ -540,10 +511,10 @@
 					 PIN_OTYPE_PUSHPULL(PC11) | \
 					 PIN_OTYPE_PUSHPULL(PC12) | \
 					 PIN_OTYPE_PUSHPULL(PC13) | \
-					 PIN_OTYPE_PUSHPULL(PC14_RCC_OSC32_IN) | \
-					 PIN_OTYPE_PUSHPULL(PC15_RCC_OSC32_OUT))
+					 PIN_OTYPE_PUSHPULL(PC14_OSC32_IN) | \
+					 PIN_OTYPE_PUSHPULL(PC15_OSC32_OUT))
 
-#define VAL_GPIOC_OSPEEDR               (PIN_OSPEED_SPEED_VERYLOW(PC00) | \
+#define VAL_GPIOC_OSPEEDR               (PIN_OSPEED_SPEED_VERYLOW(PC00_LED1) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PC01) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PC02) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PC03) | \
@@ -557,44 +528,44 @@
 					 PIN_OSPEED_SPEED_VERYLOW(PC11) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PC12) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PC13) | \
-					 PIN_OSPEED_SPEED_HIGH(PC14_RCC_OSC32_IN) | \
-					 PIN_OSPEED_SPEED_HIGH(PC15_RCC_OSC32_OUT))
+					 PIN_OSPEED_SPEED_HIGH(PC14_OSC32_IN) | \
+					 PIN_OSPEED_SPEED_HIGH(PC15_OSC32_OUT))
 
-#define VAL_GPIOC_PUPDR                 (PIN_PUPDR_FLOATING(PC00) | \
-					 PIN_PUPDR_FLOATING(PC01) | \
-					 PIN_PUPDR_FLOATING(PC02) | \
-					 PIN_PUPDR_FLOATING(PC03) | \
-					 PIN_PUPDR_FLOATING(PC04) | \
-					 PIN_PUPDR_FLOATING(PC05) | \
-					 PIN_PUPDR_FLOATING(PC06) | \
-					 PIN_PUPDR_FLOATING(PC07) | \
-					 PIN_PUPDR_FLOATING(PC08) | \
-					 PIN_PUPDR_FLOATING(PC09) | \
-					 PIN_PUPDR_FLOATING(PC10) | \
-					 PIN_PUPDR_FLOATING(PC11) | \
-					 PIN_PUPDR_FLOATING(PC12) | \
-					 PIN_PUPDR_FLOATING(PC13) | \
-					 PIN_PUPDR_FLOATING(PC14_RCC_OSC32_IN) | \
-					 PIN_PUPDR_FLOATING(PC15_RCC_OSC32_OUT))
+#define VAL_GPIOC_PUPDR                 (PIN_PUPDR_FLOATING(PC00_LED1) | \
+					 PIN_PUPDR_PULLDOWN(PC01) | \
+					 PIN_PUPDR_PULLDOWN(PC02) | \
+					 PIN_PUPDR_PULLDOWN(PC03) | \
+					 PIN_PUPDR_PULLDOWN(PC04) | \
+					 PIN_PUPDR_PULLDOWN(PC05) | \
+					 PIN_PUPDR_PULLDOWN(PC06) | \
+					 PIN_PUPDR_PULLDOWN(PC07) | \
+					 PIN_PUPDR_PULLDOWN(PC08) | \
+					 PIN_PUPDR_PULLDOWN(PC09) | \
+					 PIN_PUPDR_PULLDOWN(PC10) | \
+					 PIN_PUPDR_PULLDOWN(PC11) | \
+					 PIN_PUPDR_PULLDOWN(PC12) | \
+					 PIN_PUPDR_PULLDOWN(PC13) | \
+					 PIN_PUPDR_FLOATING(PC14_OSC32_IN) | \
+					 PIN_PUPDR_FLOATING(PC15_OSC32_OUT))
 
-#define VAL_GPIOC_ODR                   (PIN_ODR_LEVEL_HIGH(PC00) | \
-					 PIN_ODR_LEVEL_HIGH(PC01) | \
-					 PIN_ODR_LEVEL_HIGH(PC02) | \
-					 PIN_ODR_LEVEL_HIGH(PC03) | \
-					 PIN_ODR_LEVEL_HIGH(PC04) | \
-					 PIN_ODR_LEVEL_HIGH(PC05) | \
-					 PIN_ODR_LEVEL_HIGH(PC06) | \
-					 PIN_ODR_LEVEL_HIGH(PC07) | \
-					 PIN_ODR_LEVEL_HIGH(PC08) | \
-					 PIN_ODR_LEVEL_HIGH(PC09) | \
-					 PIN_ODR_LEVEL_HIGH(PC10) | \
-					 PIN_ODR_LEVEL_HIGH(PC11) | \
-					 PIN_ODR_LEVEL_HIGH(PC12) | \
-					 PIN_ODR_LEVEL_HIGH(PC13) | \
-					 PIN_ODR_LEVEL_HIGH(PC14_RCC_OSC32_IN) | \
-					 PIN_ODR_LEVEL_HIGH(PC15_RCC_OSC32_OUT))
+#define VAL_GPIOC_ODR                   (PIN_ODR_LEVEL_HIGH(PC00_LED1) | \
+					 PIN_ODR_LEVEL_LOW(PC01) | \
+					 PIN_ODR_LEVEL_LOW(PC02) | \
+					 PIN_ODR_LEVEL_LOW(PC03) | \
+					 PIN_ODR_LEVEL_LOW(PC04) | \
+					 PIN_ODR_LEVEL_LOW(PC05) | \
+					 PIN_ODR_LEVEL_LOW(PC06) | \
+					 PIN_ODR_LEVEL_LOW(PC07) | \
+					 PIN_ODR_LEVEL_LOW(PC08) | \
+					 PIN_ODR_LEVEL_LOW(PC09) | \
+					 PIN_ODR_LEVEL_LOW(PC10) | \
+					 PIN_ODR_LEVEL_LOW(PC11) | \
+					 PIN_ODR_LEVEL_LOW(PC12) | \
+					 PIN_ODR_LEVEL_LOW(PC13) | \
+					 PIN_ODR_LEVEL_HIGH(PC14_OSC32_IN) | \
+					 PIN_ODR_LEVEL_HIGH(PC15_OSC32_OUT))
 
-#define VAL_GPIOC_AFRL			(PIN_AFIO_AF(PC00, 0) | \
+#define VAL_GPIOC_AFRL			(PIN_AFIO_AF(PC00_LED1, 0) | \
 					 PIN_AFIO_AF(PC01, 0) | \
 					 PIN_AFIO_AF(PC02, 0) | \
 					 PIN_AFIO_AF(PC03, 0) | \
@@ -609,59 +580,25 @@
 					 PIN_AFIO_AF(PC11, 0) | \
 					 PIN_AFIO_AF(PC12, 0) | \
 					 PIN_AFIO_AF(PC13, 0) | \
-					 PIN_AFIO_AF(PC14_RCC_OSC32_IN, 0) | \
-					 PIN_AFIO_AF(PC15_RCC_OSC32_OUT, 0))
+					 PIN_AFIO_AF(PC14_OSC32_IN, 0) | \
+					 PIN_AFIO_AF(PC15_OSC32_OUT, 0))
 
-#define VAL_GPIOC_ASCR                  (PIN_ASCR_DISABLED(PC00) | \
-					 PIN_ASCR_DISABLED(PC01) | \
-					 PIN_ASCR_DISABLED(PC02) | \
-					 PIN_ASCR_DISABLED(PC03) | \
-					 PIN_ASCR_DISABLED(PC04) | \
-					 PIN_ASCR_DISABLED(PC05) | \
-					 PIN_ASCR_DISABLED(PC06) | \
-					 PIN_ASCR_DISABLED(PC07) | \
-					 PIN_ASCR_DISABLED(PC08) | \
-					 PIN_ASCR_DISABLED(PC09) | \
-					 PIN_ASCR_DISABLED(PC10) | \
-					 PIN_ASCR_DISABLED(PC11) | \
-					 PIN_ASCR_DISABLED(PC12) | \
-					 PIN_ASCR_DISABLED(PC13) | \
-					 PIN_ASCR_DISABLED(PC14_RCC_OSC32_IN) | \
-					 PIN_ASCR_DISABLED(PC15_RCC_OSC32_OUT))
-
-#define VAL_GPIOC_LOCKR                 (PIN_LOCKR_DISABLED(PC00) | \
-					 PIN_LOCKR_DISABLED(PC01) | \
-					 PIN_LOCKR_DISABLED(PC02) | \
-					 PIN_LOCKR_DISABLED(PC03) | \
-					 PIN_LOCKR_DISABLED(PC04) | \
-					 PIN_LOCKR_DISABLED(PC05) | \
-					 PIN_LOCKR_DISABLED(PC06) | \
-					 PIN_LOCKR_DISABLED(PC07) | \
-					 PIN_LOCKR_DISABLED(PC08) | \
-					 PIN_LOCKR_DISABLED(PC09) | \
-					 PIN_LOCKR_DISABLED(PC10) | \
-					 PIN_LOCKR_DISABLED(PC11) | \
-					 PIN_LOCKR_DISABLED(PC12) | \
-					 PIN_LOCKR_DISABLED(PC13) | \
-					 PIN_LOCKR_DISABLED(PC14_RCC_OSC32_IN) | \
-					 PIN_LOCKR_DISABLED(PC15_RCC_OSC32_OUT))
-
-#define VAL_GPIOD_MODER                 (PIN_MODE_ANALOG(PD00) | \
-					 PIN_MODE_ANALOG(PD01) | \
-					 PIN_MODE_ANALOG(PD02) | \
-					 PIN_MODE_ANALOG(PD03) | \
-					 PIN_MODE_ANALOG(PD04) | \
-					 PIN_MODE_ANALOG(PD05) | \
-					 PIN_MODE_ANALOG(PD06) | \
-					 PIN_MODE_ANALOG(PD07) | \
-					 PIN_MODE_ANALOG(PD08) | \
-					 PIN_MODE_ANALOG(PD09) | \
-					 PIN_MODE_ANALOG(PD10) | \
-					 PIN_MODE_ANALOG(PD11) | \
-					 PIN_MODE_ANALOG(PD12) | \
-					 PIN_MODE_ANALOG(PD13) | \
-					 PIN_MODE_ANALOG(PD14) | \
-					 PIN_MODE_ANALOG(PD15))
+#define VAL_GPIOD_MODER                 (PIN_MODE_INPUT(PD00) | \
+					 PIN_MODE_INPUT(PD01) | \
+					 PIN_MODE_INPUT(PD02) | \
+					 PIN_MODE_INPUT(PD03) | \
+					 PIN_MODE_INPUT(PD04) | \
+					 PIN_MODE_INPUT(PD05) | \
+					 PIN_MODE_INPUT(PD06) | \
+					 PIN_MODE_INPUT(PD07) | \
+					 PIN_MODE_INPUT(PD08) | \
+					 PIN_MODE_INPUT(PD09) | \
+					 PIN_MODE_INPUT(PD10) | \
+					 PIN_MODE_INPUT(PD11) | \
+					 PIN_MODE_INPUT(PD12) | \
+					 PIN_MODE_INPUT(PD13) | \
+					 PIN_MODE_INPUT(PD14) | \
+					 PIN_MODE_INPUT(PD15))
 
 #define VAL_GPIOD_OTYPER                (PIN_OTYPE_PUSHPULL(PD00) | \
 					 PIN_OTYPE_PUSHPULL(PD01) | \
@@ -697,39 +634,39 @@
 					 PIN_OSPEED_SPEED_VERYLOW(PD14) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PD15))
 
-#define VAL_GPIOD_PUPDR                 (PIN_PUPDR_FLOATING(PD00) | \
-					 PIN_PUPDR_FLOATING(PD01) | \
-					 PIN_PUPDR_FLOATING(PD02) | \
-					 PIN_PUPDR_FLOATING(PD03) | \
-					 PIN_PUPDR_FLOATING(PD04) | \
-					 PIN_PUPDR_FLOATING(PD05) | \
-					 PIN_PUPDR_FLOATING(PD06) | \
-					 PIN_PUPDR_FLOATING(PD07) | \
-					 PIN_PUPDR_FLOATING(PD08) | \
-					 PIN_PUPDR_FLOATING(PD09) | \
-					 PIN_PUPDR_FLOATING(PD10) | \
-					 PIN_PUPDR_FLOATING(PD11) | \
-					 PIN_PUPDR_FLOATING(PD12) | \
-					 PIN_PUPDR_FLOATING(PD13) | \
-					 PIN_PUPDR_FLOATING(PD14) | \
-					 PIN_PUPDR_FLOATING(PD15))
+#define VAL_GPIOD_PUPDR                 (PIN_PUPDR_PULLDOWN(PD00) | \
+					 PIN_PUPDR_PULLDOWN(PD01) | \
+					 PIN_PUPDR_PULLDOWN(PD02) | \
+					 PIN_PUPDR_PULLDOWN(PD03) | \
+					 PIN_PUPDR_PULLDOWN(PD04) | \
+					 PIN_PUPDR_PULLDOWN(PD05) | \
+					 PIN_PUPDR_PULLDOWN(PD06) | \
+					 PIN_PUPDR_PULLDOWN(PD07) | \
+					 PIN_PUPDR_PULLDOWN(PD08) | \
+					 PIN_PUPDR_PULLDOWN(PD09) | \
+					 PIN_PUPDR_PULLDOWN(PD10) | \
+					 PIN_PUPDR_PULLDOWN(PD11) | \
+					 PIN_PUPDR_PULLDOWN(PD12) | \
+					 PIN_PUPDR_PULLDOWN(PD13) | \
+					 PIN_PUPDR_PULLDOWN(PD14) | \
+					 PIN_PUPDR_PULLDOWN(PD15))
 
-#define VAL_GPIOD_ODR                   (PIN_ODR_LEVEL_HIGH(PD00) | \
-					 PIN_ODR_LEVEL_HIGH(PD01) | \
-					 PIN_ODR_LEVEL_HIGH(PD02) | \
-					 PIN_ODR_LEVEL_HIGH(PD03) | \
-					 PIN_ODR_LEVEL_HIGH(PD04) | \
-					 PIN_ODR_LEVEL_HIGH(PD05) | \
-					 PIN_ODR_LEVEL_HIGH(PD06) | \
-					 PIN_ODR_LEVEL_HIGH(PD07) | \
-					 PIN_ODR_LEVEL_HIGH(PD08) | \
-					 PIN_ODR_LEVEL_HIGH(PD09) | \
-					 PIN_ODR_LEVEL_HIGH(PD10) | \
-					 PIN_ODR_LEVEL_HIGH(PD11) | \
-					 PIN_ODR_LEVEL_HIGH(PD12) | \
-					 PIN_ODR_LEVEL_HIGH(PD13) | \
-					 PIN_ODR_LEVEL_HIGH(PD14) | \
-					 PIN_ODR_LEVEL_HIGH(PD15))
+#define VAL_GPIOD_ODR                   (PIN_ODR_LEVEL_LOW(PD00) | \
+					 PIN_ODR_LEVEL_LOW(PD01) | \
+					 PIN_ODR_LEVEL_LOW(PD02) | \
+					 PIN_ODR_LEVEL_LOW(PD03) | \
+					 PIN_ODR_LEVEL_LOW(PD04) | \
+					 PIN_ODR_LEVEL_LOW(PD05) | \
+					 PIN_ODR_LEVEL_LOW(PD06) | \
+					 PIN_ODR_LEVEL_LOW(PD07) | \
+					 PIN_ODR_LEVEL_LOW(PD08) | \
+					 PIN_ODR_LEVEL_LOW(PD09) | \
+					 PIN_ODR_LEVEL_LOW(PD10) | \
+					 PIN_ODR_LEVEL_LOW(PD11) | \
+					 PIN_ODR_LEVEL_LOW(PD12) | \
+					 PIN_ODR_LEVEL_LOW(PD13) | \
+					 PIN_ODR_LEVEL_LOW(PD14) | \
+					 PIN_ODR_LEVEL_LOW(PD15))
 
 #define VAL_GPIOD_AFRL			(PIN_AFIO_AF(PD00, 0) | \
 					 PIN_AFIO_AF(PD01, 0) | \
@@ -749,193 +686,22 @@
 					 PIN_AFIO_AF(PD14, 0) | \
 					 PIN_AFIO_AF(PD15, 0))
 
-#define VAL_GPIOD_ASCR                  (PIN_ASCR_DISABLED(PD00) | \
-					 PIN_ASCR_DISABLED(PD01) | \
-					 PIN_ASCR_DISABLED(PD02) | \
-					 PIN_ASCR_DISABLED(PD03) | \
-					 PIN_ASCR_DISABLED(PD04) | \
-					 PIN_ASCR_DISABLED(PD05) | \
-					 PIN_ASCR_DISABLED(PD06) | \
-					 PIN_ASCR_DISABLED(PD07) | \
-					 PIN_ASCR_DISABLED(PD08) | \
-					 PIN_ASCR_DISABLED(PD09) | \
-					 PIN_ASCR_DISABLED(PD10) | \
-					 PIN_ASCR_DISABLED(PD11) | \
-					 PIN_ASCR_DISABLED(PD12) | \
-					 PIN_ASCR_DISABLED(PD13) | \
-					 PIN_ASCR_DISABLED(PD14) | \
-					 PIN_ASCR_DISABLED(PD15))
-
-#define VAL_GPIOD_LOCKR                 (PIN_LOCKR_DISABLED(PD00) | \
-					 PIN_LOCKR_DISABLED(PD01) | \
-					 PIN_LOCKR_DISABLED(PD02) | \
-					 PIN_LOCKR_DISABLED(PD03) | \
-					 PIN_LOCKR_DISABLED(PD04) | \
-					 PIN_LOCKR_DISABLED(PD05) | \
-					 PIN_LOCKR_DISABLED(PD06) | \
-					 PIN_LOCKR_DISABLED(PD07) | \
-					 PIN_LOCKR_DISABLED(PD08) | \
-					 PIN_LOCKR_DISABLED(PD09) | \
-					 PIN_LOCKR_DISABLED(PD10) | \
-					 PIN_LOCKR_DISABLED(PD11) | \
-					 PIN_LOCKR_DISABLED(PD12) | \
-					 PIN_LOCKR_DISABLED(PD13) | \
-					 PIN_LOCKR_DISABLED(PD14) | \
-					 PIN_LOCKR_DISABLED(PD15))
-
-#define VAL_GPIOH_MODER                 (PIN_MODE_ANALOG(PH00) | \
-					 PIN_MODE_ANALOG(PH01) | \
-					 PIN_MODE_ANALOG(PH02) | \
-					 PIN_MODE_ANALOG(PH03) | \
-					 PIN_MODE_ANALOG(PH04) | \
-					 PIN_MODE_ANALOG(PH05) | \
-					 PIN_MODE_ANALOG(PH06) | \
-					 PIN_MODE_ANALOG(PH07) | \
-					 PIN_MODE_ANALOG(PH08) | \
-					 PIN_MODE_ANALOG(PH09) | \
-					 PIN_MODE_ANALOG(PH10) | \
-					 PIN_MODE_ANALOG(PH11) | \
-					 PIN_MODE_ANALOG(PH12) | \
-					 PIN_MODE_ANALOG(PH13) | \
-					 PIN_MODE_ANALOG(PH14) | \
-					 PIN_MODE_ANALOG(PH15))
-
-#define VAL_GPIOH_OTYPER                (PIN_OTYPE_PUSHPULL(PH00) | \
-					 PIN_OTYPE_PUSHPULL(PH01) | \
-					 PIN_OTYPE_PUSHPULL(PH02) | \
-					 PIN_OTYPE_PUSHPULL(PH03) | \
-					 PIN_OTYPE_PUSHPULL(PH04) | \
-					 PIN_OTYPE_PUSHPULL(PH05) | \
-					 PIN_OTYPE_PUSHPULL(PH06) | \
-					 PIN_OTYPE_PUSHPULL(PH07) | \
-					 PIN_OTYPE_PUSHPULL(PH08) | \
-					 PIN_OTYPE_PUSHPULL(PH09) | \
-					 PIN_OTYPE_PUSHPULL(PH10) | \
-					 PIN_OTYPE_PUSHPULL(PH11) | \
-					 PIN_OTYPE_PUSHPULL(PH12) | \
-					 PIN_OTYPE_PUSHPULL(PH13) | \
-					 PIN_OTYPE_PUSHPULL(PH14) | \
-					 PIN_OTYPE_PUSHPULL(PH15))
-
-#define VAL_GPIOH_OSPEEDR               (PIN_OSPEED_SPEED_VERYLOW(PH00) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH01) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH02) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH03) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH04) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH05) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH06) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH07) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH08) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH09) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH10) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH11) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH12) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH13) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH14) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PH15))
-
-#define VAL_GPIOH_PUPDR                 (PIN_PUPDR_FLOATING(PH00) | \
-					 PIN_PUPDR_FLOATING(PH01) | \
-					 PIN_PUPDR_FLOATING(PH02) | \
-					 PIN_PUPDR_FLOATING(PH03) | \
-					 PIN_PUPDR_FLOATING(PH04) | \
-					 PIN_PUPDR_FLOATING(PH05) | \
-					 PIN_PUPDR_FLOATING(PH06) | \
-					 PIN_PUPDR_FLOATING(PH07) | \
-					 PIN_PUPDR_FLOATING(PH08) | \
-					 PIN_PUPDR_FLOATING(PH09) | \
-					 PIN_PUPDR_FLOATING(PH10) | \
-					 PIN_PUPDR_FLOATING(PH11) | \
-					 PIN_PUPDR_FLOATING(PH12) | \
-					 PIN_PUPDR_FLOATING(PH13) | \
-					 PIN_PUPDR_FLOATING(PH14) | \
-					 PIN_PUPDR_FLOATING(PH15))
-
-#define VAL_GPIOH_ODR                   (PIN_ODR_LEVEL_HIGH(PH00) | \
-					 PIN_ODR_LEVEL_HIGH(PH01) | \
-					 PIN_ODR_LEVEL_HIGH(PH02) | \
-					 PIN_ODR_LEVEL_HIGH(PH03) | \
-					 PIN_ODR_LEVEL_HIGH(PH04) | \
-					 PIN_ODR_LEVEL_HIGH(PH05) | \
-					 PIN_ODR_LEVEL_HIGH(PH06) | \
-					 PIN_ODR_LEVEL_HIGH(PH07) | \
-					 PIN_ODR_LEVEL_HIGH(PH08) | \
-					 PIN_ODR_LEVEL_HIGH(PH09) | \
-					 PIN_ODR_LEVEL_HIGH(PH10) | \
-					 PIN_ODR_LEVEL_HIGH(PH11) | \
-					 PIN_ODR_LEVEL_HIGH(PH12) | \
-					 PIN_ODR_LEVEL_HIGH(PH13) | \
-					 PIN_ODR_LEVEL_HIGH(PH14) | \
-					 PIN_ODR_LEVEL_HIGH(PH15))
-
-#define VAL_GPIOH_AFRL			(PIN_AFIO_AF(PH00, 0) | \
-					 PIN_AFIO_AF(PH01, 0) | \
-					 PIN_AFIO_AF(PH02, 0) | \
-					 PIN_AFIO_AF(PH03, 0) | \
-					 PIN_AFIO_AF(PH04, 0) | \
-					 PIN_AFIO_AF(PH05, 0) | \
-					 PIN_AFIO_AF(PH06, 0) | \
-					 PIN_AFIO_AF(PH07, 0))
-
-#define VAL_GPIOH_AFRH			(PIN_AFIO_AF(PH08, 0) | \
-					 PIN_AFIO_AF(PH09, 0) | \
-					 PIN_AFIO_AF(PH10, 0) | \
-					 PIN_AFIO_AF(PH11, 0) | \
-					 PIN_AFIO_AF(PH12, 0) | \
-					 PIN_AFIO_AF(PH13, 0) | \
-					 PIN_AFIO_AF(PH14, 0) | \
-					 PIN_AFIO_AF(PH15, 0))
-
-#define VAL_GPIOH_ASCR                  (PIN_ASCR_DISABLED(PH00) | \
-					 PIN_ASCR_DISABLED(PH01) | \
-					 PIN_ASCR_DISABLED(PH02) | \
-					 PIN_ASCR_DISABLED(PH03) | \
-					 PIN_ASCR_DISABLED(PH04) | \
-					 PIN_ASCR_DISABLED(PH05) | \
-					 PIN_ASCR_DISABLED(PH06) | \
-					 PIN_ASCR_DISABLED(PH07) | \
-					 PIN_ASCR_DISABLED(PH08) | \
-					 PIN_ASCR_DISABLED(PH09) | \
-					 PIN_ASCR_DISABLED(PH10) | \
-					 PIN_ASCR_DISABLED(PH11) | \
-					 PIN_ASCR_DISABLED(PH12) | \
-					 PIN_ASCR_DISABLED(PH13) | \
-					 PIN_ASCR_DISABLED(PH14) | \
-					 PIN_ASCR_DISABLED(PH15))
-
-#define VAL_GPIOH_LOCKR                 (PIN_LOCKR_DISABLED(PH00) | \
-					 PIN_LOCKR_DISABLED(PH01) | \
-					 PIN_LOCKR_DISABLED(PH02) | \
-					 PIN_LOCKR_DISABLED(PH03) | \
-					 PIN_LOCKR_DISABLED(PH04) | \
-					 PIN_LOCKR_DISABLED(PH05) | \
-					 PIN_LOCKR_DISABLED(PH06) | \
-					 PIN_LOCKR_DISABLED(PH07) | \
-					 PIN_LOCKR_DISABLED(PH08) | \
-					 PIN_LOCKR_DISABLED(PH09) | \
-					 PIN_LOCKR_DISABLED(PH10) | \
-					 PIN_LOCKR_DISABLED(PH11) | \
-					 PIN_LOCKR_DISABLED(PH12) | \
-					 PIN_LOCKR_DISABLED(PH13) | \
-					 PIN_LOCKR_DISABLED(PH14) | \
-					 PIN_LOCKR_DISABLED(PH15))
-
-#define VAL_GPIOE_MODER                 (PIN_MODE_ANALOG(PE00) | \
-					 PIN_MODE_ANALOG(PE01) | \
-					 PIN_MODE_ANALOG(PE02) | \
-					 PIN_MODE_ANALOG(PE03) | \
-					 PIN_MODE_ANALOG(PE04) | \
-					 PIN_MODE_ANALOG(PE05) | \
-					 PIN_MODE_ANALOG(PE06) | \
-					 PIN_MODE_ANALOG(PE07) | \
-					 PIN_MODE_ANALOG(PE08) | \
-					 PIN_MODE_ANALOG(PE09) | \
-					 PIN_MODE_ANALOG(PE10) | \
-					 PIN_MODE_ANALOG(PE11) | \
-					 PIN_MODE_ANALOG(PE12) | \
-					 PIN_MODE_ANALOG(PE13) | \
-					 PIN_MODE_ANALOG(PE14) | \
-					 PIN_MODE_ANALOG(PE15))
+#define VAL_GPIOE_MODER                 (PIN_MODE_INPUT(PE00) | \
+					 PIN_MODE_INPUT(PE01) | \
+					 PIN_MODE_INPUT(PE02) | \
+					 PIN_MODE_INPUT(PE03) | \
+					 PIN_MODE_INPUT(PE04) | \
+					 PIN_MODE_INPUT(PE05) | \
+					 PIN_MODE_INPUT(PE06) | \
+					 PIN_MODE_INPUT(PE07) | \
+					 PIN_MODE_INPUT(PE08) | \
+					 PIN_MODE_INPUT(PE09) | \
+					 PIN_MODE_INPUT(PE10) | \
+					 PIN_MODE_INPUT(PE11) | \
+					 PIN_MODE_INPUT(PE12) | \
+					 PIN_MODE_INPUT(PE13) | \
+					 PIN_MODE_INPUT(PE14) | \
+					 PIN_MODE_INPUT(PE15))
 
 #define VAL_GPIOE_OTYPER                (PIN_OTYPE_PUSHPULL(PE00) | \
 					 PIN_OTYPE_PUSHPULL(PE01) | \
@@ -971,39 +737,39 @@
 					 PIN_OSPEED_SPEED_VERYLOW(PE14) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PE15))
 
-#define VAL_GPIOE_PUPDR                 (PIN_PUPDR_FLOATING(PE00) | \
-					 PIN_PUPDR_FLOATING(PE01) | \
-					 PIN_PUPDR_FLOATING(PE02) | \
-					 PIN_PUPDR_FLOATING(PE03) | \
-					 PIN_PUPDR_FLOATING(PE04) | \
-					 PIN_PUPDR_FLOATING(PE05) | \
-					 PIN_PUPDR_FLOATING(PE06) | \
-					 PIN_PUPDR_FLOATING(PE07) | \
-					 PIN_PUPDR_FLOATING(PE08) | \
-					 PIN_PUPDR_FLOATING(PE09) | \
-					 PIN_PUPDR_FLOATING(PE10) | \
-					 PIN_PUPDR_FLOATING(PE11) | \
-					 PIN_PUPDR_FLOATING(PE12) | \
-					 PIN_PUPDR_FLOATING(PE13) | \
-					 PIN_PUPDR_FLOATING(PE14) | \
-					 PIN_PUPDR_FLOATING(PE15))
+#define VAL_GPIOE_PUPDR                 (PIN_PUPDR_PULLDOWN(PE00) | \
+					 PIN_PUPDR_PULLDOWN(PE01) | \
+					 PIN_PUPDR_PULLDOWN(PE02) | \
+					 PIN_PUPDR_PULLDOWN(PE03) | \
+					 PIN_PUPDR_PULLDOWN(PE04) | \
+					 PIN_PUPDR_PULLDOWN(PE05) | \
+					 PIN_PUPDR_PULLDOWN(PE06) | \
+					 PIN_PUPDR_PULLDOWN(PE07) | \
+					 PIN_PUPDR_PULLDOWN(PE08) | \
+					 PIN_PUPDR_PULLDOWN(PE09) | \
+					 PIN_PUPDR_PULLDOWN(PE10) | \
+					 PIN_PUPDR_PULLDOWN(PE11) | \
+					 PIN_PUPDR_PULLDOWN(PE12) | \
+					 PIN_PUPDR_PULLDOWN(PE13) | \
+					 PIN_PUPDR_PULLDOWN(PE14) | \
+					 PIN_PUPDR_PULLDOWN(PE15))
 
-#define VAL_GPIOE_ODR                   (PIN_ODR_LEVEL_HIGH(PE00) | \
-					 PIN_ODR_LEVEL_HIGH(PE01) | \
-					 PIN_ODR_LEVEL_HIGH(PE02) | \
-					 PIN_ODR_LEVEL_HIGH(PE03) | \
-					 PIN_ODR_LEVEL_HIGH(PE04) | \
-					 PIN_ODR_LEVEL_HIGH(PE05) | \
-					 PIN_ODR_LEVEL_HIGH(PE06) | \
-					 PIN_ODR_LEVEL_HIGH(PE07) | \
-					 PIN_ODR_LEVEL_HIGH(PE08) | \
-					 PIN_ODR_LEVEL_HIGH(PE09) | \
-					 PIN_ODR_LEVEL_HIGH(PE10) | \
-					 PIN_ODR_LEVEL_HIGH(PE11) | \
-					 PIN_ODR_LEVEL_HIGH(PE12) | \
-					 PIN_ODR_LEVEL_HIGH(PE13) | \
-					 PIN_ODR_LEVEL_HIGH(PE14) | \
-					 PIN_ODR_LEVEL_HIGH(PE15))
+#define VAL_GPIOE_ODR                   (PIN_ODR_LEVEL_LOW(PE00) | \
+					 PIN_ODR_LEVEL_LOW(PE01) | \
+					 PIN_ODR_LEVEL_LOW(PE02) | \
+					 PIN_ODR_LEVEL_LOW(PE03) | \
+					 PIN_ODR_LEVEL_LOW(PE04) | \
+					 PIN_ODR_LEVEL_LOW(PE05) | \
+					 PIN_ODR_LEVEL_LOW(PE06) | \
+					 PIN_ODR_LEVEL_LOW(PE07) | \
+					 PIN_ODR_LEVEL_LOW(PE08) | \
+					 PIN_ODR_LEVEL_LOW(PE09) | \
+					 PIN_ODR_LEVEL_LOW(PE10) | \
+					 PIN_ODR_LEVEL_LOW(PE11) | \
+					 PIN_ODR_LEVEL_LOW(PE12) | \
+					 PIN_ODR_LEVEL_LOW(PE13) | \
+					 PIN_ODR_LEVEL_LOW(PE14) | \
+					 PIN_ODR_LEVEL_LOW(PE15))
 
 #define VAL_GPIOE_AFRL			(PIN_AFIO_AF(PE00, 0) | \
 					 PIN_AFIO_AF(PE01, 0) | \
@@ -1023,56 +789,22 @@
 					 PIN_AFIO_AF(PE14, 0) | \
 					 PIN_AFIO_AF(PE15, 0))
 
-#define VAL_GPIOE_ASCR                  (PIN_ASCR_DISABLED(PE00) | \
-					 PIN_ASCR_DISABLED(PE01) | \
-					 PIN_ASCR_DISABLED(PE02) | \
-					 PIN_ASCR_DISABLED(PE03) | \
-					 PIN_ASCR_DISABLED(PE04) | \
-					 PIN_ASCR_DISABLED(PE05) | \
-					 PIN_ASCR_DISABLED(PE06) | \
-					 PIN_ASCR_DISABLED(PE07) | \
-					 PIN_ASCR_DISABLED(PE08) | \
-					 PIN_ASCR_DISABLED(PE09) | \
-					 PIN_ASCR_DISABLED(PE10) | \
-					 PIN_ASCR_DISABLED(PE11) | \
-					 PIN_ASCR_DISABLED(PE12) | \
-					 PIN_ASCR_DISABLED(PE13) | \
-					 PIN_ASCR_DISABLED(PE14) | \
-					 PIN_ASCR_DISABLED(PE15))
-
-#define VAL_GPIOE_LOCKR                 (PIN_LOCKR_DISABLED(PE00) | \
-					 PIN_LOCKR_DISABLED(PE01) | \
-					 PIN_LOCKR_DISABLED(PE02) | \
-					 PIN_LOCKR_DISABLED(PE03) | \
-					 PIN_LOCKR_DISABLED(PE04) | \
-					 PIN_LOCKR_DISABLED(PE05) | \
-					 PIN_LOCKR_DISABLED(PE06) | \
-					 PIN_LOCKR_DISABLED(PE07) | \
-					 PIN_LOCKR_DISABLED(PE08) | \
-					 PIN_LOCKR_DISABLED(PE09) | \
-					 PIN_LOCKR_DISABLED(PE10) | \
-					 PIN_LOCKR_DISABLED(PE11) | \
-					 PIN_LOCKR_DISABLED(PE12) | \
-					 PIN_LOCKR_DISABLED(PE13) | \
-					 PIN_LOCKR_DISABLED(PE14) | \
-					 PIN_LOCKR_DISABLED(PE15))
-
-#define VAL_GPIOF_MODER                 (PIN_MODE_ANALOG(PF00) | \
-					 PIN_MODE_ANALOG(PF01) | \
-					 PIN_MODE_ANALOG(PF02) | \
-					 PIN_MODE_ANALOG(PF03) | \
-					 PIN_MODE_ANALOG(PF04) | \
-					 PIN_MODE_ANALOG(PF05) | \
-					 PIN_MODE_ANALOG(PF06) | \
-					 PIN_MODE_ANALOG(PF07) | \
-					 PIN_MODE_ANALOG(PF08) | \
-					 PIN_MODE_ANALOG(PF09) | \
-					 PIN_MODE_ANALOG(PF10) | \
-					 PIN_MODE_ANALOG(PF11) | \
-					 PIN_MODE_ANALOG(PF12) | \
-					 PIN_MODE_ANALOG(PF13) | \
-					 PIN_MODE_ANALOG(PF14) | \
-					 PIN_MODE_ANALOG(PF15))
+#define VAL_GPIOF_MODER                 (PIN_MODE_INPUT(PF00) | \
+					 PIN_MODE_INPUT(PF01) | \
+					 PIN_MODE_INPUT(PF02) | \
+					 PIN_MODE_INPUT(PF03) | \
+					 PIN_MODE_INPUT(PF04) | \
+					 PIN_MODE_INPUT(PF05) | \
+					 PIN_MODE_INPUT(PF06) | \
+					 PIN_MODE_INPUT(PF07) | \
+					 PIN_MODE_INPUT(PF08) | \
+					 PIN_MODE_INPUT(PF09) | \
+					 PIN_MODE_INPUT(PF10) | \
+					 PIN_MODE_INPUT(PF11) | \
+					 PIN_MODE_INPUT(PF12) | \
+					 PIN_MODE_INPUT(PF13) | \
+					 PIN_MODE_INPUT(PF14) | \
+					 PIN_MODE_INPUT(PF15))
 
 #define VAL_GPIOF_OTYPER                (PIN_OTYPE_PUSHPULL(PF00) | \
 					 PIN_OTYPE_PUSHPULL(PF01) | \
@@ -1108,39 +840,39 @@
 					 PIN_OSPEED_SPEED_VERYLOW(PF14) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PF15))
 
-#define VAL_GPIOF_PUPDR                 (PIN_PUPDR_FLOATING(PF00) | \
-					 PIN_PUPDR_FLOATING(PF01) | \
-					 PIN_PUPDR_FLOATING(PF02) | \
-					 PIN_PUPDR_FLOATING(PF03) | \
-					 PIN_PUPDR_FLOATING(PF04) | \
-					 PIN_PUPDR_FLOATING(PF05) | \
-					 PIN_PUPDR_FLOATING(PF06) | \
-					 PIN_PUPDR_FLOATING(PF07) | \
-					 PIN_PUPDR_FLOATING(PF08) | \
-					 PIN_PUPDR_FLOATING(PF09) | \
-					 PIN_PUPDR_FLOATING(PF10) | \
-					 PIN_PUPDR_FLOATING(PF11) | \
-					 PIN_PUPDR_FLOATING(PF12) | \
-					 PIN_PUPDR_FLOATING(PF13) | \
-					 PIN_PUPDR_FLOATING(PF14) | \
-					 PIN_PUPDR_FLOATING(PF15))
+#define VAL_GPIOF_PUPDR                 (PIN_PUPDR_PULLDOWN(PF00) | \
+					 PIN_PUPDR_PULLDOWN(PF01) | \
+					 PIN_PUPDR_PULLDOWN(PF02) | \
+					 PIN_PUPDR_PULLDOWN(PF03) | \
+					 PIN_PUPDR_PULLDOWN(PF04) | \
+					 PIN_PUPDR_PULLDOWN(PF05) | \
+					 PIN_PUPDR_PULLDOWN(PF06) | \
+					 PIN_PUPDR_PULLDOWN(PF07) | \
+					 PIN_PUPDR_PULLDOWN(PF08) | \
+					 PIN_PUPDR_PULLDOWN(PF09) | \
+					 PIN_PUPDR_PULLDOWN(PF10) | \
+					 PIN_PUPDR_PULLDOWN(PF11) | \
+					 PIN_PUPDR_PULLDOWN(PF12) | \
+					 PIN_PUPDR_PULLDOWN(PF13) | \
+					 PIN_PUPDR_PULLDOWN(PF14) | \
+					 PIN_PUPDR_PULLDOWN(PF15))
 
-#define VAL_GPIOF_ODR                   (PIN_ODR_LEVEL_HIGH(PF00) | \
-					 PIN_ODR_LEVEL_HIGH(PF01) | \
-					 PIN_ODR_LEVEL_HIGH(PF02) | \
-					 PIN_ODR_LEVEL_HIGH(PF03) | \
-					 PIN_ODR_LEVEL_HIGH(PF04) | \
-					 PIN_ODR_LEVEL_HIGH(PF05) | \
-					 PIN_ODR_LEVEL_HIGH(PF06) | \
-					 PIN_ODR_LEVEL_HIGH(PF07) | \
-					 PIN_ODR_LEVEL_HIGH(PF08) | \
-					 PIN_ODR_LEVEL_HIGH(PF09) | \
-					 PIN_ODR_LEVEL_HIGH(PF10) | \
-					 PIN_ODR_LEVEL_HIGH(PF11) | \
-					 PIN_ODR_LEVEL_HIGH(PF12) | \
-					 PIN_ODR_LEVEL_HIGH(PF13) | \
-					 PIN_ODR_LEVEL_HIGH(PF14) | \
-					 PIN_ODR_LEVEL_HIGH(PF15))
+#define VAL_GPIOF_ODR                   (PIN_ODR_LEVEL_LOW(PF00) | \
+					 PIN_ODR_LEVEL_LOW(PF01) | \
+					 PIN_ODR_LEVEL_LOW(PF02) | \
+					 PIN_ODR_LEVEL_LOW(PF03) | \
+					 PIN_ODR_LEVEL_LOW(PF04) | \
+					 PIN_ODR_LEVEL_LOW(PF05) | \
+					 PIN_ODR_LEVEL_LOW(PF06) | \
+					 PIN_ODR_LEVEL_LOW(PF07) | \
+					 PIN_ODR_LEVEL_LOW(PF08) | \
+					 PIN_ODR_LEVEL_LOW(PF09) | \
+					 PIN_ODR_LEVEL_LOW(PF10) | \
+					 PIN_ODR_LEVEL_LOW(PF11) | \
+					 PIN_ODR_LEVEL_LOW(PF12) | \
+					 PIN_ODR_LEVEL_LOW(PF13) | \
+					 PIN_ODR_LEVEL_LOW(PF14) | \
+					 PIN_ODR_LEVEL_LOW(PF15))
 
 #define VAL_GPIOF_AFRL			(PIN_AFIO_AF(PF00, 0) | \
 					 PIN_AFIO_AF(PF01, 0) | \
@@ -1160,56 +892,22 @@
 					 PIN_AFIO_AF(PF14, 0) | \
 					 PIN_AFIO_AF(PF15, 0))
 
-#define VAL_GPIOF_ASCR                  (PIN_ASCR_DISABLED(PF00) | \
-					 PIN_ASCR_DISABLED(PF01) | \
-					 PIN_ASCR_DISABLED(PF02) | \
-					 PIN_ASCR_DISABLED(PF03) | \
-					 PIN_ASCR_DISABLED(PF04) | \
-					 PIN_ASCR_DISABLED(PF05) | \
-					 PIN_ASCR_DISABLED(PF06) | \
-					 PIN_ASCR_DISABLED(PF07) | \
-					 PIN_ASCR_DISABLED(PF08) | \
-					 PIN_ASCR_DISABLED(PF09) | \
-					 PIN_ASCR_DISABLED(PF10) | \
-					 PIN_ASCR_DISABLED(PF11) | \
-					 PIN_ASCR_DISABLED(PF12) | \
-					 PIN_ASCR_DISABLED(PF13) | \
-					 PIN_ASCR_DISABLED(PF14) | \
-					 PIN_ASCR_DISABLED(PF15))
-
-#define VAL_GPIOF_LOCKR                 (PIN_LOCKR_DISABLED(PF00) | \
-					 PIN_LOCKR_DISABLED(PF01) | \
-					 PIN_LOCKR_DISABLED(PF02) | \
-					 PIN_LOCKR_DISABLED(PF03) | \
-					 PIN_LOCKR_DISABLED(PF04) | \
-					 PIN_LOCKR_DISABLED(PF05) | \
-					 PIN_LOCKR_DISABLED(PF06) | \
-					 PIN_LOCKR_DISABLED(PF07) | \
-					 PIN_LOCKR_DISABLED(PF08) | \
-					 PIN_LOCKR_DISABLED(PF09) | \
-					 PIN_LOCKR_DISABLED(PF10) | \
-					 PIN_LOCKR_DISABLED(PF11) | \
-					 PIN_LOCKR_DISABLED(PF12) | \
-					 PIN_LOCKR_DISABLED(PF13) | \
-					 PIN_LOCKR_DISABLED(PF14) | \
-					 PIN_LOCKR_DISABLED(PF15))
-
-#define VAL_GPIOG_MODER                 (PIN_MODE_ANALOG(PG00) | \
-					 PIN_MODE_ANALOG(PG01) | \
-					 PIN_MODE_ANALOG(PG02) | \
-					 PIN_MODE_ANALOG(PG03) | \
-					 PIN_MODE_ANALOG(PG04) | \
-					 PIN_MODE_ANALOG(PG05) | \
-					 PIN_MODE_ANALOG(PG06) | \
-					 PIN_MODE_ANALOG(PG07) | \
-					 PIN_MODE_ANALOG(PG08) | \
-					 PIN_MODE_ANALOG(PG09) | \
-					 PIN_MODE_ANALOG(PG10) | \
-					 PIN_MODE_ANALOG(PG11) | \
-					 PIN_MODE_ANALOG(PG12) | \
-					 PIN_MODE_ANALOG(PG13) | \
-					 PIN_MODE_ANALOG(PG14) | \
-					 PIN_MODE_ANALOG(PG15))
+#define VAL_GPIOG_MODER                 (PIN_MODE_INPUT(PG00) | \
+					 PIN_MODE_INPUT(PG01) | \
+					 PIN_MODE_INPUT(PG02) | \
+					 PIN_MODE_INPUT(PG03) | \
+					 PIN_MODE_INPUT(PG04) | \
+					 PIN_MODE_INPUT(PG05) | \
+					 PIN_MODE_INPUT(PG06) | \
+					 PIN_MODE_INPUT(PG07) | \
+					 PIN_MODE_INPUT(PG08) | \
+					 PIN_MODE_INPUT(PG09) | \
+					 PIN_MODE_INPUT(PG10) | \
+					 PIN_MODE_INPUT(PG11) | \
+					 PIN_MODE_INPUT(PG12) | \
+					 PIN_MODE_INPUT(PG13) | \
+					 PIN_MODE_INPUT(PG14) | \
+					 PIN_MODE_INPUT(PG15))
 
 #define VAL_GPIOG_OTYPER                (PIN_OTYPE_PUSHPULL(PG00) | \
 					 PIN_OTYPE_PUSHPULL(PG01) | \
@@ -1245,39 +943,39 @@
 					 PIN_OSPEED_SPEED_VERYLOW(PG14) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PG15))
 
-#define VAL_GPIOG_PUPDR                 (PIN_PUPDR_FLOATING(PG00) | \
-					 PIN_PUPDR_FLOATING(PG01) | \
-					 PIN_PUPDR_FLOATING(PG02) | \
-					 PIN_PUPDR_FLOATING(PG03) | \
-					 PIN_PUPDR_FLOATING(PG04) | \
-					 PIN_PUPDR_FLOATING(PG05) | \
-					 PIN_PUPDR_FLOATING(PG06) | \
-					 PIN_PUPDR_FLOATING(PG07) | \
-					 PIN_PUPDR_FLOATING(PG08) | \
-					 PIN_PUPDR_FLOATING(PG09) | \
-					 PIN_PUPDR_FLOATING(PG10) | \
-					 PIN_PUPDR_FLOATING(PG11) | \
-					 PIN_PUPDR_FLOATING(PG12) | \
-					 PIN_PUPDR_FLOATING(PG13) | \
-					 PIN_PUPDR_FLOATING(PG14) | \
-					 PIN_PUPDR_FLOATING(PG15))
+#define VAL_GPIOG_PUPDR                 (PIN_PUPDR_PULLDOWN(PG00) | \
+					 PIN_PUPDR_PULLDOWN(PG01) | \
+					 PIN_PUPDR_PULLDOWN(PG02) | \
+					 PIN_PUPDR_PULLDOWN(PG03) | \
+					 PIN_PUPDR_PULLDOWN(PG04) | \
+					 PIN_PUPDR_PULLDOWN(PG05) | \
+					 PIN_PUPDR_PULLDOWN(PG06) | \
+					 PIN_PUPDR_PULLDOWN(PG07) | \
+					 PIN_PUPDR_PULLDOWN(PG08) | \
+					 PIN_PUPDR_PULLDOWN(PG09) | \
+					 PIN_PUPDR_PULLDOWN(PG10) | \
+					 PIN_PUPDR_PULLDOWN(PG11) | \
+					 PIN_PUPDR_PULLDOWN(PG12) | \
+					 PIN_PUPDR_PULLDOWN(PG13) | \
+					 PIN_PUPDR_PULLDOWN(PG14) | \
+					 PIN_PUPDR_PULLDOWN(PG15))
 
-#define VAL_GPIOG_ODR                   (PIN_ODR_LEVEL_HIGH(PG00) | \
-					 PIN_ODR_LEVEL_HIGH(PG01) | \
-					 PIN_ODR_LEVEL_HIGH(PG02) | \
-					 PIN_ODR_LEVEL_HIGH(PG03) | \
-					 PIN_ODR_LEVEL_HIGH(PG04) | \
-					 PIN_ODR_LEVEL_HIGH(PG05) | \
-					 PIN_ODR_LEVEL_HIGH(PG06) | \
-					 PIN_ODR_LEVEL_HIGH(PG07) | \
-					 PIN_ODR_LEVEL_HIGH(PG08) | \
-					 PIN_ODR_LEVEL_HIGH(PG09) | \
-					 PIN_ODR_LEVEL_HIGH(PG10) | \
-					 PIN_ODR_LEVEL_HIGH(PG11) | \
-					 PIN_ODR_LEVEL_HIGH(PG12) | \
-					 PIN_ODR_LEVEL_HIGH(PG13) | \
-					 PIN_ODR_LEVEL_HIGH(PG14) | \
-					 PIN_ODR_LEVEL_HIGH(PG15))
+#define VAL_GPIOG_ODR                   (PIN_ODR_LEVEL_LOW(PG00) | \
+					 PIN_ODR_LEVEL_LOW(PG01) | \
+					 PIN_ODR_LEVEL_LOW(PG02) | \
+					 PIN_ODR_LEVEL_LOW(PG03) | \
+					 PIN_ODR_LEVEL_LOW(PG04) | \
+					 PIN_ODR_LEVEL_LOW(PG05) | \
+					 PIN_ODR_LEVEL_LOW(PG06) | \
+					 PIN_ODR_LEVEL_LOW(PG07) | \
+					 PIN_ODR_LEVEL_LOW(PG08) | \
+					 PIN_ODR_LEVEL_LOW(PG09) | \
+					 PIN_ODR_LEVEL_LOW(PG10) | \
+					 PIN_ODR_LEVEL_LOW(PG11) | \
+					 PIN_ODR_LEVEL_LOW(PG12) | \
+					 PIN_ODR_LEVEL_LOW(PG13) | \
+					 PIN_ODR_LEVEL_LOW(PG14) | \
+					 PIN_ODR_LEVEL_LOW(PG15))
 
 #define VAL_GPIOG_AFRL			(PIN_AFIO_AF(PG00, 0) | \
 					 PIN_AFIO_AF(PG01, 0) | \
@@ -1297,52 +995,434 @@
 					 PIN_AFIO_AF(PG14, 0) | \
 					 PIN_AFIO_AF(PG15, 0))
 
-#define VAL_GPIOG_ASCR                  (PIN_ASCR_DISABLED(PG00) | \
-					 PIN_ASCR_DISABLED(PG01) | \
-					 PIN_ASCR_DISABLED(PG02) | \
-					 PIN_ASCR_DISABLED(PG03) | \
-					 PIN_ASCR_DISABLED(PG04) | \
-					 PIN_ASCR_DISABLED(PG05) | \
-					 PIN_ASCR_DISABLED(PG06) | \
-					 PIN_ASCR_DISABLED(PG07) | \
-					 PIN_ASCR_DISABLED(PG08) | \
-					 PIN_ASCR_DISABLED(PG09) | \
-					 PIN_ASCR_DISABLED(PG10) | \
-					 PIN_ASCR_DISABLED(PG11) | \
-					 PIN_ASCR_DISABLED(PG12) | \
-					 PIN_ASCR_DISABLED(PG13) | \
-					 PIN_ASCR_DISABLED(PG14) | \
-					 PIN_ASCR_DISABLED(PG15))
+#define VAL_GPIOH_MODER                 (PIN_MODE_ALTERNATE(PH00_OSC_IN) | \
+					 PIN_MODE_ALTERNATE(PH01_OSC_OUT) | \
+					 PIN_MODE_INPUT(PH02) | \
+					 PIN_MODE_INPUT(PH03) | \
+					 PIN_MODE_INPUT(PH04) | \
+					 PIN_MODE_INPUT(PH05) | \
+					 PIN_MODE_INPUT(PH06) | \
+					 PIN_MODE_INPUT(PH07) | \
+					 PIN_MODE_INPUT(PH08) | \
+					 PIN_MODE_INPUT(PH09) | \
+					 PIN_MODE_INPUT(PH10) | \
+					 PIN_MODE_INPUT(PH11) | \
+					 PIN_MODE_INPUT(PH12) | \
+					 PIN_MODE_INPUT(PH13) | \
+					 PIN_MODE_INPUT(PH14) | \
+					 PIN_MODE_INPUT(PH15))
 
-#define VAL_GPIOG_LOCKR                 (PIN_LOCKR_DISABLED(PG00) | \
-					 PIN_LOCKR_DISABLED(PG01) | \
-					 PIN_LOCKR_DISABLED(PG02) | \
-					 PIN_LOCKR_DISABLED(PG03) | \
-					 PIN_LOCKR_DISABLED(PG04) | \
-					 PIN_LOCKR_DISABLED(PG05) | \
-					 PIN_LOCKR_DISABLED(PG06) | \
-					 PIN_LOCKR_DISABLED(PG07) | \
-					 PIN_LOCKR_DISABLED(PG08) | \
-					 PIN_LOCKR_DISABLED(PG09) | \
-					 PIN_LOCKR_DISABLED(PG10) | \
-					 PIN_LOCKR_DISABLED(PG11) | \
-					 PIN_LOCKR_DISABLED(PG12) | \
-					 PIN_LOCKR_DISABLED(PG13) | \
-					 PIN_LOCKR_DISABLED(PG14) | \
-					 PIN_LOCKR_DISABLED(PG15))
+#define VAL_GPIOH_OTYPER                (PIN_OTYPE_PUSHPULL(PH00_OSC_IN) | \
+					 PIN_OTYPE_PUSHPULL(PH01_OSC_OUT) | \
+					 PIN_OTYPE_PUSHPULL(PH02) | \
+					 PIN_OTYPE_PUSHPULL(PH03) | \
+					 PIN_OTYPE_PUSHPULL(PH04) | \
+					 PIN_OTYPE_PUSHPULL(PH05) | \
+					 PIN_OTYPE_PUSHPULL(PH06) | \
+					 PIN_OTYPE_PUSHPULL(PH07) | \
+					 PIN_OTYPE_PUSHPULL(PH08) | \
+					 PIN_OTYPE_PUSHPULL(PH09) | \
+					 PIN_OTYPE_PUSHPULL(PH10) | \
+					 PIN_OTYPE_PUSHPULL(PH11) | \
+					 PIN_OTYPE_PUSHPULL(PH12) | \
+					 PIN_OTYPE_PUSHPULL(PH13) | \
+					 PIN_OTYPE_PUSHPULL(PH14) | \
+					 PIN_OTYPE_PUSHPULL(PH15))
 
-#define AF_PA02_VCP_TX                   7U
-#define AF_LINE_A02_VCP_TX               7U
-#define AF_PA03_VCP_RX                   7U
-#define AF_LINE_A03_VCP_RX               7U
+#define VAL_GPIOH_OSPEEDR               (PIN_OSPEED_SPEED_HIGH(PH00_OSC_IN) | \
+					 PIN_OSPEED_SPEED_HIGH(PH01_OSC_OUT) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH02) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH03) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH04) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH05) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH06) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH07) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH08) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH09) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH10) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH11) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH12) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH13) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH14) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PH15))
+
+#define VAL_GPIOH_PUPDR                 (PIN_PUPDR_FLOATING(PH00_OSC_IN) | \
+					 PIN_PUPDR_FLOATING(PH01_OSC_OUT) | \
+					 PIN_PUPDR_PULLDOWN(PH02) | \
+					 PIN_PUPDR_PULLDOWN(PH03) | \
+					 PIN_PUPDR_PULLDOWN(PH04) | \
+					 PIN_PUPDR_PULLDOWN(PH05) | \
+					 PIN_PUPDR_PULLDOWN(PH06) | \
+					 PIN_PUPDR_PULLDOWN(PH07) | \
+					 PIN_PUPDR_PULLDOWN(PH08) | \
+					 PIN_PUPDR_PULLDOWN(PH09) | \
+					 PIN_PUPDR_PULLDOWN(PH10) | \
+					 PIN_PUPDR_PULLDOWN(PH11) | \
+					 PIN_PUPDR_PULLDOWN(PH12) | \
+					 PIN_PUPDR_PULLDOWN(PH13) | \
+					 PIN_PUPDR_PULLDOWN(PH14) | \
+					 PIN_PUPDR_PULLDOWN(PH15))
+
+#define VAL_GPIOH_ODR                   (PIN_ODR_LEVEL_HIGH(PH00_OSC_IN) | \
+					 PIN_ODR_LEVEL_HIGH(PH01_OSC_OUT) | \
+					 PIN_ODR_LEVEL_LOW(PH02) | \
+					 PIN_ODR_LEVEL_LOW(PH03) | \
+					 PIN_ODR_LEVEL_LOW(PH04) | \
+					 PIN_ODR_LEVEL_LOW(PH05) | \
+					 PIN_ODR_LEVEL_LOW(PH06) | \
+					 PIN_ODR_LEVEL_LOW(PH07) | \
+					 PIN_ODR_LEVEL_LOW(PH08) | \
+					 PIN_ODR_LEVEL_LOW(PH09) | \
+					 PIN_ODR_LEVEL_LOW(PH10) | \
+					 PIN_ODR_LEVEL_LOW(PH11) | \
+					 PIN_ODR_LEVEL_LOW(PH12) | \
+					 PIN_ODR_LEVEL_LOW(PH13) | \
+					 PIN_ODR_LEVEL_LOW(PH14) | \
+					 PIN_ODR_LEVEL_LOW(PH15))
+
+#define VAL_GPIOH_AFRL			(PIN_AFIO_AF(PH00_OSC_IN, 0) | \
+					 PIN_AFIO_AF(PH01_OSC_OUT, 0) | \
+					 PIN_AFIO_AF(PH02, 0) | \
+					 PIN_AFIO_AF(PH03, 0) | \
+					 PIN_AFIO_AF(PH04, 0) | \
+					 PIN_AFIO_AF(PH05, 0) | \
+					 PIN_AFIO_AF(PH06, 0) | \
+					 PIN_AFIO_AF(PH07, 0))
+
+#define VAL_GPIOH_AFRH			(PIN_AFIO_AF(PH08, 0) | \
+					 PIN_AFIO_AF(PH09, 0) | \
+					 PIN_AFIO_AF(PH10, 0) | \
+					 PIN_AFIO_AF(PH11, 0) | \
+					 PIN_AFIO_AF(PH12, 0) | \
+					 PIN_AFIO_AF(PH13, 0) | \
+					 PIN_AFIO_AF(PH14, 0) | \
+					 PIN_AFIO_AF(PH15, 0))
+
+#define VAL_GPIOI_MODER                 (PIN_MODE_INPUT(PI00) | \
+					 PIN_MODE_INPUT(PI01) | \
+					 PIN_MODE_INPUT(PI02) | \
+					 PIN_MODE_INPUT(PI03) | \
+					 PIN_MODE_INPUT(PI04) | \
+					 PIN_MODE_INPUT(PI05) | \
+					 PIN_MODE_INPUT(PI06) | \
+					 PIN_MODE_INPUT(PI07) | \
+					 PIN_MODE_INPUT(PI08) | \
+					 PIN_MODE_INPUT(PI09) | \
+					 PIN_MODE_INPUT(PI10) | \
+					 PIN_MODE_INPUT(PI11) | \
+					 PIN_MODE_INPUT(PI12) | \
+					 PIN_MODE_INPUT(PI13) | \
+					 PIN_MODE_INPUT(PI14) | \
+					 PIN_MODE_INPUT(PI15))
+
+#define VAL_GPIOI_OTYPER                (PIN_OTYPE_PUSHPULL(PI00) | \
+					 PIN_OTYPE_PUSHPULL(PI01) | \
+					 PIN_OTYPE_PUSHPULL(PI02) | \
+					 PIN_OTYPE_PUSHPULL(PI03) | \
+					 PIN_OTYPE_PUSHPULL(PI04) | \
+					 PIN_OTYPE_PUSHPULL(PI05) | \
+					 PIN_OTYPE_PUSHPULL(PI06) | \
+					 PIN_OTYPE_PUSHPULL(PI07) | \
+					 PIN_OTYPE_PUSHPULL(PI08) | \
+					 PIN_OTYPE_PUSHPULL(PI09) | \
+					 PIN_OTYPE_PUSHPULL(PI10) | \
+					 PIN_OTYPE_PUSHPULL(PI11) | \
+					 PIN_OTYPE_PUSHPULL(PI12) | \
+					 PIN_OTYPE_PUSHPULL(PI13) | \
+					 PIN_OTYPE_PUSHPULL(PI14) | \
+					 PIN_OTYPE_PUSHPULL(PI15))
+
+#define VAL_GPIOI_OSPEEDR               (PIN_OSPEED_SPEED_VERYLOW(PI00) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI01) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI02) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI03) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI04) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI05) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI06) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI07) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI08) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI09) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI10) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI11) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI12) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI13) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI14) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PI15))
+
+#define VAL_GPIOI_PUPDR                 (PIN_PUPDR_PULLDOWN(PI00) | \
+					 PIN_PUPDR_PULLDOWN(PI01) | \
+					 PIN_PUPDR_PULLDOWN(PI02) | \
+					 PIN_PUPDR_PULLDOWN(PI03) | \
+					 PIN_PUPDR_PULLDOWN(PI04) | \
+					 PIN_PUPDR_PULLDOWN(PI05) | \
+					 PIN_PUPDR_PULLDOWN(PI06) | \
+					 PIN_PUPDR_PULLDOWN(PI07) | \
+					 PIN_PUPDR_PULLDOWN(PI08) | \
+					 PIN_PUPDR_PULLDOWN(PI09) | \
+					 PIN_PUPDR_PULLDOWN(PI10) | \
+					 PIN_PUPDR_PULLDOWN(PI11) | \
+					 PIN_PUPDR_PULLDOWN(PI12) | \
+					 PIN_PUPDR_PULLDOWN(PI13) | \
+					 PIN_PUPDR_PULLDOWN(PI14) | \
+					 PIN_PUPDR_PULLDOWN(PI15))
+
+#define VAL_GPIOI_ODR                   (PIN_ODR_LEVEL_LOW(PI00) | \
+					 PIN_ODR_LEVEL_LOW(PI01) | \
+					 PIN_ODR_LEVEL_LOW(PI02) | \
+					 PIN_ODR_LEVEL_LOW(PI03) | \
+					 PIN_ODR_LEVEL_LOW(PI04) | \
+					 PIN_ODR_LEVEL_LOW(PI05) | \
+					 PIN_ODR_LEVEL_LOW(PI06) | \
+					 PIN_ODR_LEVEL_LOW(PI07) | \
+					 PIN_ODR_LEVEL_LOW(PI08) | \
+					 PIN_ODR_LEVEL_LOW(PI09) | \
+					 PIN_ODR_LEVEL_LOW(PI10) | \
+					 PIN_ODR_LEVEL_LOW(PI11) | \
+					 PIN_ODR_LEVEL_LOW(PI12) | \
+					 PIN_ODR_LEVEL_LOW(PI13) | \
+					 PIN_ODR_LEVEL_LOW(PI14) | \
+					 PIN_ODR_LEVEL_LOW(PI15))
+
+#define VAL_GPIOI_AFRL			(PIN_AFIO_AF(PI00, 0) | \
+					 PIN_AFIO_AF(PI01, 0) | \
+					 PIN_AFIO_AF(PI02, 0) | \
+					 PIN_AFIO_AF(PI03, 0) | \
+					 PIN_AFIO_AF(PI04, 0) | \
+					 PIN_AFIO_AF(PI05, 0) | \
+					 PIN_AFIO_AF(PI06, 0) | \
+					 PIN_AFIO_AF(PI07, 0))
+
+#define VAL_GPIOI_AFRH			(PIN_AFIO_AF(PI08, 0) | \
+					 PIN_AFIO_AF(PI09, 0) | \
+					 PIN_AFIO_AF(PI10, 0) | \
+					 PIN_AFIO_AF(PI11, 0) | \
+					 PIN_AFIO_AF(PI12, 0) | \
+					 PIN_AFIO_AF(PI13, 0) | \
+					 PIN_AFIO_AF(PI14, 0) | \
+					 PIN_AFIO_AF(PI15, 0))
+
+#define VAL_GPIOJ_MODER                 (PIN_MODE_INPUT(PJ00) | \
+					 PIN_MODE_INPUT(PJ01) | \
+					 PIN_MODE_INPUT(PJ02) | \
+					 PIN_MODE_INPUT(PJ03) | \
+					 PIN_MODE_INPUT(PJ04) | \
+					 PIN_MODE_INPUT(PJ05) | \
+					 PIN_MODE_INPUT(PJ06) | \
+					 PIN_MODE_INPUT(PJ07) | \
+					 PIN_MODE_INPUT(PJ08) | \
+					 PIN_MODE_INPUT(PJ09) | \
+					 PIN_MODE_INPUT(PJ10) | \
+					 PIN_MODE_INPUT(PJ11) | \
+					 PIN_MODE_INPUT(PJ12) | \
+					 PIN_MODE_INPUT(PJ13) | \
+					 PIN_MODE_INPUT(PJ14) | \
+					 PIN_MODE_INPUT(PJ15))
+
+#define VAL_GPIOJ_OTYPER                (PIN_OTYPE_PUSHPULL(PJ00) | \
+					 PIN_OTYPE_PUSHPULL(PJ01) | \
+					 PIN_OTYPE_PUSHPULL(PJ02) | \
+					 PIN_OTYPE_PUSHPULL(PJ03) | \
+					 PIN_OTYPE_PUSHPULL(PJ04) | \
+					 PIN_OTYPE_PUSHPULL(PJ05) | \
+					 PIN_OTYPE_PUSHPULL(PJ06) | \
+					 PIN_OTYPE_PUSHPULL(PJ07) | \
+					 PIN_OTYPE_PUSHPULL(PJ08) | \
+					 PIN_OTYPE_PUSHPULL(PJ09) | \
+					 PIN_OTYPE_PUSHPULL(PJ10) | \
+					 PIN_OTYPE_PUSHPULL(PJ11) | \
+					 PIN_OTYPE_PUSHPULL(PJ12) | \
+					 PIN_OTYPE_PUSHPULL(PJ13) | \
+					 PIN_OTYPE_PUSHPULL(PJ14) | \
+					 PIN_OTYPE_PUSHPULL(PJ15))
+
+#define VAL_GPIOJ_OSPEEDR               (PIN_OSPEED_SPEED_VERYLOW(PJ00) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ01) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ02) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ03) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ04) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ05) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ06) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ07) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ08) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ09) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ10) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ11) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ12) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ13) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ14) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PJ15))
+
+#define VAL_GPIOJ_PUPDR                 (PIN_PUPDR_PULLDOWN(PJ00) | \
+					 PIN_PUPDR_PULLDOWN(PJ01) | \
+					 PIN_PUPDR_PULLDOWN(PJ02) | \
+					 PIN_PUPDR_PULLDOWN(PJ03) | \
+					 PIN_PUPDR_PULLDOWN(PJ04) | \
+					 PIN_PUPDR_PULLDOWN(PJ05) | \
+					 PIN_PUPDR_PULLDOWN(PJ06) | \
+					 PIN_PUPDR_PULLDOWN(PJ07) | \
+					 PIN_PUPDR_PULLDOWN(PJ08) | \
+					 PIN_PUPDR_PULLDOWN(PJ09) | \
+					 PIN_PUPDR_PULLDOWN(PJ10) | \
+					 PIN_PUPDR_PULLDOWN(PJ11) | \
+					 PIN_PUPDR_PULLDOWN(PJ12) | \
+					 PIN_PUPDR_PULLDOWN(PJ13) | \
+					 PIN_PUPDR_PULLDOWN(PJ14) | \
+					 PIN_PUPDR_PULLDOWN(PJ15))
+
+#define VAL_GPIOJ_ODR                   (PIN_ODR_LEVEL_LOW(PJ00) | \
+					 PIN_ODR_LEVEL_LOW(PJ01) | \
+					 PIN_ODR_LEVEL_LOW(PJ02) | \
+					 PIN_ODR_LEVEL_LOW(PJ03) | \
+					 PIN_ODR_LEVEL_LOW(PJ04) | \
+					 PIN_ODR_LEVEL_LOW(PJ05) | \
+					 PIN_ODR_LEVEL_LOW(PJ06) | \
+					 PIN_ODR_LEVEL_LOW(PJ07) | \
+					 PIN_ODR_LEVEL_LOW(PJ08) | \
+					 PIN_ODR_LEVEL_LOW(PJ09) | \
+					 PIN_ODR_LEVEL_LOW(PJ10) | \
+					 PIN_ODR_LEVEL_LOW(PJ11) | \
+					 PIN_ODR_LEVEL_LOW(PJ12) | \
+					 PIN_ODR_LEVEL_LOW(PJ13) | \
+					 PIN_ODR_LEVEL_LOW(PJ14) | \
+					 PIN_ODR_LEVEL_LOW(PJ15))
+
+#define VAL_GPIOJ_AFRL			(PIN_AFIO_AF(PJ00, 0) | \
+					 PIN_AFIO_AF(PJ01, 0) | \
+					 PIN_AFIO_AF(PJ02, 0) | \
+					 PIN_AFIO_AF(PJ03, 0) | \
+					 PIN_AFIO_AF(PJ04, 0) | \
+					 PIN_AFIO_AF(PJ05, 0) | \
+					 PIN_AFIO_AF(PJ06, 0) | \
+					 PIN_AFIO_AF(PJ07, 0))
+
+#define VAL_GPIOJ_AFRH			(PIN_AFIO_AF(PJ08, 0) | \
+					 PIN_AFIO_AF(PJ09, 0) | \
+					 PIN_AFIO_AF(PJ10, 0) | \
+					 PIN_AFIO_AF(PJ11, 0) | \
+					 PIN_AFIO_AF(PJ12, 0) | \
+					 PIN_AFIO_AF(PJ13, 0) | \
+					 PIN_AFIO_AF(PJ14, 0) | \
+					 PIN_AFIO_AF(PJ15, 0))
+
+#define VAL_GPIOK_MODER                 (PIN_MODE_INPUT(PK00) | \
+					 PIN_MODE_INPUT(PK01) | \
+					 PIN_MODE_INPUT(PK02) | \
+					 PIN_MODE_INPUT(PK03) | \
+					 PIN_MODE_INPUT(PK04) | \
+					 PIN_MODE_INPUT(PK05) | \
+					 PIN_MODE_INPUT(PK06) | \
+					 PIN_MODE_INPUT(PK07) | \
+					 PIN_MODE_INPUT(PK08) | \
+					 PIN_MODE_INPUT(PK09) | \
+					 PIN_MODE_INPUT(PK10) | \
+					 PIN_MODE_INPUT(PK11) | \
+					 PIN_MODE_INPUT(PK12) | \
+					 PIN_MODE_INPUT(PK13) | \
+					 PIN_MODE_INPUT(PK14) | \
+					 PIN_MODE_INPUT(PK15))
+
+#define VAL_GPIOK_OTYPER                (PIN_OTYPE_PUSHPULL(PK00) | \
+					 PIN_OTYPE_PUSHPULL(PK01) | \
+					 PIN_OTYPE_PUSHPULL(PK02) | \
+					 PIN_OTYPE_PUSHPULL(PK03) | \
+					 PIN_OTYPE_PUSHPULL(PK04) | \
+					 PIN_OTYPE_PUSHPULL(PK05) | \
+					 PIN_OTYPE_PUSHPULL(PK06) | \
+					 PIN_OTYPE_PUSHPULL(PK07) | \
+					 PIN_OTYPE_PUSHPULL(PK08) | \
+					 PIN_OTYPE_PUSHPULL(PK09) | \
+					 PIN_OTYPE_PUSHPULL(PK10) | \
+					 PIN_OTYPE_PUSHPULL(PK11) | \
+					 PIN_OTYPE_PUSHPULL(PK12) | \
+					 PIN_OTYPE_PUSHPULL(PK13) | \
+					 PIN_OTYPE_PUSHPULL(PK14) | \
+					 PIN_OTYPE_PUSHPULL(PK15))
+
+#define VAL_GPIOK_OSPEEDR               (PIN_OSPEED_SPEED_VERYLOW(PK00) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK01) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK02) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK03) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK04) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK05) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK06) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK07) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK08) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK09) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK10) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK11) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK12) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK13) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK14) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PK15))
+
+#define VAL_GPIOK_PUPDR                 (PIN_PUPDR_PULLDOWN(PK00) | \
+					 PIN_PUPDR_PULLDOWN(PK01) | \
+					 PIN_PUPDR_PULLDOWN(PK02) | \
+					 PIN_PUPDR_PULLDOWN(PK03) | \
+					 PIN_PUPDR_PULLDOWN(PK04) | \
+					 PIN_PUPDR_PULLDOWN(PK05) | \
+					 PIN_PUPDR_PULLDOWN(PK06) | \
+					 PIN_PUPDR_PULLDOWN(PK07) | \
+					 PIN_PUPDR_PULLDOWN(PK08) | \
+					 PIN_PUPDR_PULLDOWN(PK09) | \
+					 PIN_PUPDR_PULLDOWN(PK10) | \
+					 PIN_PUPDR_PULLDOWN(PK11) | \
+					 PIN_PUPDR_PULLDOWN(PK12) | \
+					 PIN_PUPDR_PULLDOWN(PK13) | \
+					 PIN_PUPDR_PULLDOWN(PK14) | \
+					 PIN_PUPDR_PULLDOWN(PK15))
+
+#define VAL_GPIOK_ODR                   (PIN_ODR_LEVEL_LOW(PK00) | \
+					 PIN_ODR_LEVEL_LOW(PK01) | \
+					 PIN_ODR_LEVEL_LOW(PK02) | \
+					 PIN_ODR_LEVEL_LOW(PK03) | \
+					 PIN_ODR_LEVEL_LOW(PK04) | \
+					 PIN_ODR_LEVEL_LOW(PK05) | \
+					 PIN_ODR_LEVEL_LOW(PK06) | \
+					 PIN_ODR_LEVEL_LOW(PK07) | \
+					 PIN_ODR_LEVEL_LOW(PK08) | \
+					 PIN_ODR_LEVEL_LOW(PK09) | \
+					 PIN_ODR_LEVEL_LOW(PK10) | \
+					 PIN_ODR_LEVEL_LOW(PK11) | \
+					 PIN_ODR_LEVEL_LOW(PK12) | \
+					 PIN_ODR_LEVEL_LOW(PK13) | \
+					 PIN_ODR_LEVEL_LOW(PK14) | \
+					 PIN_ODR_LEVEL_LOW(PK15))
+
+#define VAL_GPIOK_AFRL			(PIN_AFIO_AF(PK00, 0) | \
+					 PIN_AFIO_AF(PK01, 0) | \
+					 PIN_AFIO_AF(PK02, 0) | \
+					 PIN_AFIO_AF(PK03, 0) | \
+					 PIN_AFIO_AF(PK04, 0) | \
+					 PIN_AFIO_AF(PK05, 0) | \
+					 PIN_AFIO_AF(PK06, 0) | \
+					 PIN_AFIO_AF(PK07, 0))
+
+#define VAL_GPIOK_AFRH			(PIN_AFIO_AF(PK08, 0) | \
+					 PIN_AFIO_AF(PK09, 0) | \
+					 PIN_AFIO_AF(PK10, 0) | \
+					 PIN_AFIO_AF(PK11, 0) | \
+					 PIN_AFIO_AF(PK12, 0) | \
+					 PIN_AFIO_AF(PK13, 0) | \
+					 PIN_AFIO_AF(PK14, 0) | \
+					 PIN_AFIO_AF(PK15, 0))
+
 #define AF_PA13_SWDIO                    0U
-#define AF_LINE_A13_SWDIO                0U
+#define AF_LINE_SWDIO                    0U
 #define AF_PA14_SWCLK                    0U
-#define AF_LINE_A14_SWCLK                0U
-#define AF_PC14_RCC_OSC32_IN             0U
-#define AF_LINE_C14_RCC_OSC32_IN         0U
-#define AF_PC15_RCC_OSC32_OUT            0U
-#define AF_LINE_C15_RCC_OSC32_OUT        0U
+#define AF_LINE_SWCLK                    0U
+#define AF_PB06_SHELL_TX                 7U
+#define AF_LINE_SHELL_TX                 7U
+#define AF_PB07_SHELL_RX                 7U
+#define AF_LINE_SHELL_RX                 7U
+#define AF_PC14_OSC32_IN                 0U
+#define AF_LINE_OSC32_IN                 0U
+#define AF_PC15_OSC32_OUT                0U
+#define AF_LINE_OSC32_OUT                0U
+#define AF_PH00_OSC_IN                   0U
+#define AF_LINE_OSC_IN                   0U
+#define AF_PH01_OSC_OUT                  0U
+#define AF_LINE_OSC_OUT                  0U
 
 
 #if !defined(_FROM_ASM_)

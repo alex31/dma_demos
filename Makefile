@@ -5,30 +5,47 @@
 
 # Compiler options here.
 # -Wdouble-promotion -fno-omit-frame-pointer
+
+DEBUG := 1
+OPT_SPEED := 2
+OPT_SIZE := 3
+
+EXECMODE := $(DEBUG)
+#EXECMODE := $(OPT_SPEED)
+#EXECMODE := $(OPT_SIZE)
+
+
+GCCVERSIONGTEQ7 := $(shell expr `arm-none-eabi-gcc -dumpversion | cut -f1 -d.` \>= 7)
 GCC_DIAG =  -Werror -Wno-error=unused-variable -Wno-error=format \
-	    -Wno-error=unused-function \
-	    -Wunused -Wpointer-arith \
-	    -Wstrict-prototypes \
-	    -Werror=sign-compare \
-	    -Wshadow \
-	    -ftrack-macro-expansion=2 -Wno-error=strict-overflow -Wstrict-overflow=5 
+            -Wno-error=cpp \
+            -Wno-error=unused-function \
+            -Wunused -Wpointer-arith \
+            -Werror=sign-compare \
+            -Wshadow -Wparentheses -fmax-errors=5 \
+            -ftrack-macro-expansion=2 -Wno-error=strict-overflow -Wstrict-overflow=2
 
 
-ifeq ($(USE_OPT),)
+ifeq ($(EXECMODE),$(DEBUG)) 
   USE_OPT =  -O0  -ggdb3  -Wall -Wextra \
 	    -falign-functions=16 -fomit-frame-pointer \
-	    $(GCC_DIAG) \
-	    -Wl,--build-id=none 
+	    $(GCC_DIAG)
 endif
 
-ifeq ($(USE_OPT),)
-  USE_OPT =  -Ofast  -flto  -Wall -Wextra \
+ifeq ($(EXECMODE),$(OPT_SPEED)) 
+    USE_OPT =  -Ofast -flto  -Wall -Wextra \
 	    -falign-functions=16 -fomit-frame-pointer \
-	     $(GCC_DIAG) \
-	    -Wl,--build-id=none \
-            -u prvGetRegistersFromStack
+	     $(GCC_DIAG)
 endif
 
+ifeq ($(EXECMODE),$(OPT_SIZE)) 
+    USE_OPT =  -Os  -flto  -Wall -Wextra \
+	    -falign-functions=16 -fomit-frame-pointer \
+            --specs=nano.specs \
+            -DCH_DBG_STATISTICS=0 -DCH_DBG_SYSTEM_STATE_CHECK=0 -DCH_DBG_ENABLE_CHECKS=0 \
+	    -DCH_DBG_ENABLE_ASSERTS=0 -DCH_DBG_ENABLE_STACK_CHECK=0 -DCH_DBG_FILL_THREADS=0 \
+	    -DCH_DBG_THREADS_PROFILING=0 -DNOSHELL=1 -DNOTESTGEN=1\
+	     $(GCC_DIAG)
+endif
 
 
 # C specific options here (added to USE_OPT).
@@ -38,7 +55,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=gnu++1y -fno-rtti -fno-exceptions 
+  USE_CPPOPT = -std=c++2a -fno-rtti -fno-exceptions -fno-threadsafe-statics
 endif
 
 # Enable this if you want the linker to remove unused code and data
@@ -108,7 +125,7 @@ endif
 
 # Define project name here
 PROJECT = ch
-BOARD = NUCLEO476
+BOARD = DEVBM4
 
 # Target settings.
 MCU  = cortex-m4
@@ -132,10 +149,10 @@ USBD_LIB = $(VARIOUS)/Chibios-USB-Devices
 # Licensing files.
 include $(CHIBIOS)/os/license/license.mk
 # Startup files.
-include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/startup_stm32l4xx.mk
+include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
 # HAL-OSAL files (optional).
 include $(CHIBIOS)/os/hal/hal.mk
-include $(CHIBIOS)/os/hal/ports/STM32/STM32L4xx/platform.mk
+include $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/platform.mk
 include cfg/board.mk
 include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 # RTOS files (optional).
@@ -147,7 +164,7 @@ include $(CHIBIOS)/tools/mk/autobuild.mk
 
 
 # Define linker script file here
-LDSCRIPT= $(STARTUPLD)/STM32L476xG.ld
+LDSCRIPT= $(STARTUPLD)/STM32F407xG.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -216,7 +233,7 @@ $(OBJS): $(CONFDIR)/board.h
 
 
 $(CONFDIR)/board.h: $(CONFDIR)/board.cfg
-	boardGen.pl	$<  $@
+	boardGen.pl --no-adcp-in --no-pp-line	$<  $@
 
 
 stflash: all
