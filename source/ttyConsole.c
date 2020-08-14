@@ -102,17 +102,7 @@ static void cmd_mem(BaseSequentialStream *lchp, int argc,const char * const argv
   }
 
   chprintf (lchp, "core free memory : %u bytes\r\n", chCoreStatus());
-  chprintf (lchp, "heap free memory : %u bytes\r\n", getHeapFree());
-
-  void * ptr1 = malloc_m (100);
-  void * ptr2 = malloc_m (100);
-
-  chprintf (lchp, "(2x) malloc_m(1000) = %p ;; %p\r\n", ptr1, ptr2);
-  chprintf (lchp, "heap free memory : %d bytes\r\n", getHeapFree());
-
-  free_m (ptr1);
-  free_m (ptr2);
-}
+ }
 
 static void cmd_threads(BaseSequentialStream *lchp, int argc,const char * const argv[]) {
   static const char *states[] = {THD_STATE_NAMES};

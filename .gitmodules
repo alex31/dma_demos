@@ -1,0 +1,8 @@
+[submodule "chibios_svn_mirror"]
+	path = chibios_svn_mirror
+	url = https://github.com/alex31/chibios_svn_mirror.git
+	branch = stable_20.3.x
+[submodule "chibios_enac_various_common"]
+	path = chibios_enac_various_common
+	url = https://github.com/alex31/chibios_enac_various_common.git
+	branch = master

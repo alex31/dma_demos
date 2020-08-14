@@ -130,21 +130,14 @@ BOARD = DEVBM4
 # Target settings.
 MCU  = cortex-m4
 
-# Imported source files and paths.
-MY_DIRNAME=../../../ChibiOS_stable
-ifneq "$(wildcard $(MY_DIRNAME) )" ""
-   RELATIVE=../../..
-else
-  RELATIVE=../..
-endif
 
-CHIBIOS  := $(RELATIVE)/ChibiOS_20.3_stable
+CHIBIOS  := ./chibios_svn_mirror
 CONFDIR  := ./cfg
 BUILDDIR := ./build
 DEPDIR   := ./.dep
-STMSRC = $(RELATIVE)/COMMON/stm
-VARIOUS = $(RELATIVE)/COMMON/various
-USBD_LIB = $(VARIOUS)/Chibios-USB-Devices
+VARIOUS  := ./chibios_enac_various_common
+USBD_LIB := $(VARIOUS)/Chibios-USB-Devices
+TOOLDIR  := $(VARIOUS)/TOOLS
 
 # Licensing files.
 include $(CHIBIOS)/os/license/license.mk
@@ -234,15 +227,15 @@ $(OBJS): $(CONFDIR)/board.h
 
 
 $(CONFDIR)/board.h: $(CONFDIR)/board.cfg
-	boardGen.pl --no-adcp-in --no-pp-line	$<  $@
+	$(TOOLDIR)/boardGen.pl --no-adcp-in --no-pp-line	$<  $@
 
 
 stflash: all
 	@echo write $(BUILDDIR)/$(PROJECT).bin to flash memory
-	/usr/local/bin/st-flash write  $(BUILDDIR)/$(PROJECT).bin 0x08000000
+	st-flash write  $(BUILDDIR)/$(PROJECT).bin 0x08000000
 	@echo Done
 
 flash: all
 	@echo write $(BUILDDIR)/$(PROJECT).bin to flash memory
-	bmpflash  $(BUILDDIR)/$(PROJECT).elf
+	$(TOOLDIR)/bmpflash  $(BUILDDIR)/$(PROJECT).elf
 	@echo Done
