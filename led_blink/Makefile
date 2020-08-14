@@ -131,11 +131,11 @@ BOARD = DEVBM4
 MCU  = cortex-m4
 
 
-CHIBIOS  := ./chibios_svn_mirror
+CHIBIOS  := ../chibios_svn_mirror
 CONFDIR  := ./cfg
 BUILDDIR := ./build
 DEPDIR   := ./.dep
-VARIOUS  := ./chibios_enac_various_common
+VARIOUS  := ../chibios_enac_various_common
 USBD_LIB := $(VARIOUS)/Chibios-USB-Devices
 TOOLDIR  := $(VARIOUS)/TOOLS
 
