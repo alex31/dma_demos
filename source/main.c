@@ -64,9 +64,7 @@ static void blinker (void *arg)
 // remove the const keyword and the memory buffer will be in ram
 // dma buffer should be at least 32 bits aligned, and even more
 // when burst is used
-
 #define PATTERN_LEN	6U
-
 static const uint16_t pattern[PATTERN_LEN] __attribute__((aligned(4))) = { 
 			0b1000000000000000, 
 			0b0100000000000000, 
@@ -78,7 +76,7 @@ static const uint16_t pattern[PATTERN_LEN] __attribute__((aligned(4))) = {
 
 int main(void) {
 
-    /*
+  /*
    * System initializations.
    * - HAL initialization, this also initializes the configured device drivers
    *   and performs the board-specific initializations.
