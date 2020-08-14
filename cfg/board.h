@@ -48,7 +48,7 @@
 /*
  * IO pins assignments.
  */
-#define	PA00                           0U
+#define	PA00_BLUE_BUTTON               0U
 #define	PA01                           1U
 #define	PA02                           2U
 #define	PA03                           3U
@@ -111,10 +111,10 @@
 #define	PD09                           9U
 #define	PD10                           10U
 #define	PD11                           11U
-#define	PD12                           12U
-#define	PD13                           13U
-#define	PD14                           14U
-#define	PD15                           15U
+#define	PD12_LED2                      12U
+#define	PD13_LED3                      13U
+#define	PD14_LED4                      14U
+#define	PD15_LED5                      15U
 
 #define	PE00                           0U
 #define	PE01                           1U
@@ -238,6 +238,7 @@
 /*
  * IO lines assignments.
  */
+#define	LINE_BLUE_BUTTON               PAL_LINE(GPIOA, 0U)
 #define	LINE_SWDIO                     PAL_LINE(GPIOA, 13U)
 #define	LINE_SWCLK                     PAL_LINE(GPIOA, 14U)
 
@@ -247,6 +248,11 @@
 #define	LINE_LED1                      PAL_LINE(GPIOC, 0U)
 #define	LINE_OSC32_IN                  PAL_LINE(GPIOC, 14U)
 #define	LINE_OSC32_OUT                 PAL_LINE(GPIOC, 15U)
+
+#define	LINE_LED2                      PAL_LINE(GPIOD, 12U)
+#define	LINE_LED3                      PAL_LINE(GPIOD, 13U)
+#define	LINE_LED4                      PAL_LINE(GPIOD, 14U)
+#define	LINE_LED5                      PAL_LINE(GPIOD, 15U)
 
 #define	LINE_OSC_IN                    PAL_LINE(GPIOH, 0U)
 #define	LINE_OSC_OUT                   PAL_LINE(GPIOH, 1U)
@@ -274,7 +280,7 @@
 #define PIN_PUPDR_PULLDOWN(n)       (2U << ((n) * 2U))
 #define PIN_AFIO_AF(n, v)           ((v) << (((n) % 8U) * 4U))
 
-#define VAL_GPIOA_MODER                 (PIN_MODE_INPUT(PA00) | \
+#define VAL_GPIOA_MODER                 (PIN_MODE_INPUT(PA00_BLUE_BUTTON) | \
 					 PIN_MODE_INPUT(PA01) | \
 					 PIN_MODE_INPUT(PA02) | \
 					 PIN_MODE_INPUT(PA03) | \
@@ -291,7 +297,7 @@
 					 PIN_MODE_ALTERNATE(PA14_SWCLK) | \
 					 PIN_MODE_INPUT(PA15))
 
-#define VAL_GPIOA_OTYPER                (PIN_OTYPE_PUSHPULL(PA00) | \
+#define VAL_GPIOA_OTYPER                (PIN_OTYPE_OPENDRAIN(PA00_BLUE_BUTTON) | \
 					 PIN_OTYPE_PUSHPULL(PA01) | \
 					 PIN_OTYPE_PUSHPULL(PA02) | \
 					 PIN_OTYPE_PUSHPULL(PA03) | \
@@ -308,7 +314,7 @@
 					 PIN_OTYPE_PUSHPULL(PA14_SWCLK) | \
 					 PIN_OTYPE_PUSHPULL(PA15))
 
-#define VAL_GPIOA_OSPEEDR               (PIN_OSPEED_SPEED_VERYLOW(PA00) | \
+#define VAL_GPIOA_OSPEEDR               (PIN_OSPEED_SPEED_VERYLOW(PA00_BLUE_BUTTON) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PA01) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PA02) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PA03) | \
@@ -325,7 +331,7 @@
 					 PIN_OSPEED_SPEED_HIGH(PA14_SWCLK) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PA15))
 
-#define VAL_GPIOA_PUPDR                 (PIN_PUPDR_PULLDOWN(PA00) | \
+#define VAL_GPIOA_PUPDR                 (PIN_PUPDR_PULLUP(PA00_BLUE_BUTTON) | \
 					 PIN_PUPDR_PULLDOWN(PA01) | \
 					 PIN_PUPDR_PULLDOWN(PA02) | \
 					 PIN_PUPDR_PULLDOWN(PA03) | \
@@ -342,7 +348,7 @@
 					 PIN_PUPDR_FLOATING(PA14_SWCLK) | \
 					 PIN_PUPDR_PULLDOWN(PA15))
 
-#define VAL_GPIOA_ODR                   (PIN_ODR_LEVEL_LOW(PA00) | \
+#define VAL_GPIOA_ODR                   (PIN_ODR_LEVEL_LOW(PA00_BLUE_BUTTON) | \
 					 PIN_ODR_LEVEL_LOW(PA01) | \
 					 PIN_ODR_LEVEL_LOW(PA02) | \
 					 PIN_ODR_LEVEL_LOW(PA03) | \
@@ -359,7 +365,7 @@
 					 PIN_ODR_LEVEL_HIGH(PA14_SWCLK) | \
 					 PIN_ODR_LEVEL_LOW(PA15))
 
-#define VAL_GPIOA_AFRL			(PIN_AFIO_AF(PA00, 0) | \
+#define VAL_GPIOA_AFRL			(PIN_AFIO_AF(PA00_BLUE_BUTTON, 0) | \
 					 PIN_AFIO_AF(PA01, 0) | \
 					 PIN_AFIO_AF(PA02, 0) | \
 					 PIN_AFIO_AF(PA03, 0) | \
@@ -548,7 +554,7 @@
 					 PIN_PUPDR_FLOATING(PC14_OSC32_IN) | \
 					 PIN_PUPDR_FLOATING(PC15_OSC32_OUT))
 
-#define VAL_GPIOC_ODR                   (PIN_ODR_LEVEL_HIGH(PC00_LED1) | \
+#define VAL_GPIOC_ODR                   (PIN_ODR_LEVEL_LOW(PC00_LED1) | \
 					 PIN_ODR_LEVEL_LOW(PC01) | \
 					 PIN_ODR_LEVEL_LOW(PC02) | \
 					 PIN_ODR_LEVEL_LOW(PC03) | \
@@ -595,10 +601,10 @@
 					 PIN_MODE_INPUT(PD09) | \
 					 PIN_MODE_INPUT(PD10) | \
 					 PIN_MODE_INPUT(PD11) | \
-					 PIN_MODE_INPUT(PD12) | \
-					 PIN_MODE_INPUT(PD13) | \
-					 PIN_MODE_INPUT(PD14) | \
-					 PIN_MODE_INPUT(PD15))
+					 PIN_MODE_OUTPUT(PD12_LED2) | \
+					 PIN_MODE_OUTPUT(PD13_LED3) | \
+					 PIN_MODE_OUTPUT(PD14_LED4) | \
+					 PIN_MODE_OUTPUT(PD15_LED5))
 
 #define VAL_GPIOD_OTYPER                (PIN_OTYPE_PUSHPULL(PD00) | \
 					 PIN_OTYPE_PUSHPULL(PD01) | \
@@ -612,10 +618,10 @@
 					 PIN_OTYPE_PUSHPULL(PD09) | \
 					 PIN_OTYPE_PUSHPULL(PD10) | \
 					 PIN_OTYPE_PUSHPULL(PD11) | \
-					 PIN_OTYPE_PUSHPULL(PD12) | \
-					 PIN_OTYPE_PUSHPULL(PD13) | \
-					 PIN_OTYPE_PUSHPULL(PD14) | \
-					 PIN_OTYPE_PUSHPULL(PD15))
+					 PIN_OTYPE_PUSHPULL(PD12_LED2) | \
+					 PIN_OTYPE_PUSHPULL(PD13_LED3) | \
+					 PIN_OTYPE_PUSHPULL(PD14_LED4) | \
+					 PIN_OTYPE_PUSHPULL(PD15_LED5))
 
 #define VAL_GPIOD_OSPEEDR               (PIN_OSPEED_SPEED_VERYLOW(PD00) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PD01) | \
@@ -629,10 +635,10 @@
 					 PIN_OSPEED_SPEED_VERYLOW(PD09) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PD10) | \
 					 PIN_OSPEED_SPEED_VERYLOW(PD11) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PD12) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PD13) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PD14) | \
-					 PIN_OSPEED_SPEED_VERYLOW(PD15))
+					 PIN_OSPEED_SPEED_VERYLOW(PD12_LED2) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PD13_LED3) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PD14_LED4) | \
+					 PIN_OSPEED_SPEED_VERYLOW(PD15_LED5))
 
 #define VAL_GPIOD_PUPDR                 (PIN_PUPDR_PULLDOWN(PD00) | \
 					 PIN_PUPDR_PULLDOWN(PD01) | \
@@ -646,10 +652,10 @@
 					 PIN_PUPDR_PULLDOWN(PD09) | \
 					 PIN_PUPDR_PULLDOWN(PD10) | \
 					 PIN_PUPDR_PULLDOWN(PD11) | \
-					 PIN_PUPDR_PULLDOWN(PD12) | \
-					 PIN_PUPDR_PULLDOWN(PD13) | \
-					 PIN_PUPDR_PULLDOWN(PD14) | \
-					 PIN_PUPDR_PULLDOWN(PD15))
+					 PIN_PUPDR_FLOATING(PD12_LED2) | \
+					 PIN_PUPDR_FLOATING(PD13_LED3) | \
+					 PIN_PUPDR_FLOATING(PD14_LED4) | \
+					 PIN_PUPDR_FLOATING(PD15_LED5))
 
 #define VAL_GPIOD_ODR                   (PIN_ODR_LEVEL_LOW(PD00) | \
 					 PIN_ODR_LEVEL_LOW(PD01) | \
@@ -663,10 +669,10 @@
 					 PIN_ODR_LEVEL_LOW(PD09) | \
 					 PIN_ODR_LEVEL_LOW(PD10) | \
 					 PIN_ODR_LEVEL_LOW(PD11) | \
-					 PIN_ODR_LEVEL_LOW(PD12) | \
-					 PIN_ODR_LEVEL_LOW(PD13) | \
-					 PIN_ODR_LEVEL_LOW(PD14) | \
-					 PIN_ODR_LEVEL_LOW(PD15))
+					 PIN_ODR_LEVEL_LOW(PD12_LED2) | \
+					 PIN_ODR_LEVEL_LOW(PD13_LED3) | \
+					 PIN_ODR_LEVEL_LOW(PD14_LED4) | \
+					 PIN_ODR_LEVEL_LOW(PD15_LED5))
 
 #define VAL_GPIOD_AFRL			(PIN_AFIO_AF(PD00, 0) | \
 					 PIN_AFIO_AF(PD01, 0) | \
@@ -681,10 +687,10 @@
 					 PIN_AFIO_AF(PD09, 0) | \
 					 PIN_AFIO_AF(PD10, 0) | \
 					 PIN_AFIO_AF(PD11, 0) | \
-					 PIN_AFIO_AF(PD12, 0) | \
-					 PIN_AFIO_AF(PD13, 0) | \
-					 PIN_AFIO_AF(PD14, 0) | \
-					 PIN_AFIO_AF(PD15, 0))
+					 PIN_AFIO_AF(PD12_LED2, 0) | \
+					 PIN_AFIO_AF(PD13_LED3, 0) | \
+					 PIN_AFIO_AF(PD14_LED4, 0) | \
+					 PIN_AFIO_AF(PD15_LED5, 0))
 
 #define VAL_GPIOE_MODER                 (PIN_MODE_INPUT(PE00) | \
 					 PIN_MODE_INPUT(PE01) | \

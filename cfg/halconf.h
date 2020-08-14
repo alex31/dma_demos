@@ -33,6 +33,25 @@
 
 #include "mcuconf.h"
 
+
+/**
+ * @brief   Enables the DMA subsystem.
+ */
+#if !defined(STM32_DMA_USE_WAIT) || defined(__DOXYGEN__)
+#define   STM32_DMA_USE_WAIT       FALSE
+#endif
+
+#if !defined(STM32_DMA_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
+#define STM32_DMA_USE_MUTUAL_EXCLUSION    TRUE
+#endif
+
+#if !defined(STM32_DMA_USE_ASYNC_TIMOUT) || defined(__DOXYGEN__)
+#define STM32_DMA_USE_ASYNC_TIMOUT FALSE
+#endif
+
+#define   STM32_DMA_REQUIRED        TRUE
+#undef STM32_DMA_DRIVER_EXT_INIT_HOOK
+
 /**
  * @brief   Enables the PAL subsystem.
  */
@@ -44,7 +63,7 @@
  * @brief   Enables the ADC subsystem.
  */
 #if !defined(HAL_USE_ADC) || defined(__DOXYGEN__)
-#define HAL_USE_ADC                         TRUE
+#define HAL_USE_ADC                         FALSE
 #endif
 
 /**
@@ -79,7 +98,7 @@
  * @brief   Enables the GPT subsystem.
  */
 #if !defined(HAL_USE_GPT) || defined(__DOXYGEN__)
-#define HAL_USE_GPT                         FALSE
+#define HAL_USE_GPT                         TRUE
 #endif
 
 /**
@@ -121,7 +140,7 @@
  * @brief   Enables the PWM subsystem.
  */
 #if !defined(HAL_USE_PWM) || defined(__DOXYGEN__)
-#define HAL_USE_PWM                         TRUE
+#define HAL_USE_PWM                         FALSE
 #endif
 
 /**

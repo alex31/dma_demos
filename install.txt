@@ -1,0 +1,5 @@
+apt install build-essential gcc-arm-none-eabi default-jre 
+
+installation stm32cubemx depuis le site de stmicroelectronics
+https://www.st.com/en/development-tools/stm32cubemx.html
+
