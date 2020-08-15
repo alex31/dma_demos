@@ -14,7 +14,10 @@
 
 // timer configuration
 static const GPTConfig gptcfg = {
-       // timer counter will inc @ 10khz
+       // timer counter will increment @ 10khz
+       // with this value, ChibiOS HAL will calculate a 16 bit predivider
+       // from the source clock (168Mhz), so in this case
+       // predivider will be set to 16800
        .frequency    = 10000,
        
        // callback, if set is called when counter
@@ -118,7 +121,7 @@ int main(void) {
     chThdSleepMilliseconds(10);
   }
 
-  // halt the scheduler and the CPU : heartbeat led stop to blink,
+  // halt the scheduler and the CPU : heartbeat stop to blink,
   // but DMA driven LEDs continues to move
   chSysHalt("dma continue to work");
 }

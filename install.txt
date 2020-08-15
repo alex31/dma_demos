@@ -1,5 +1,29 @@
-apt install build-essential gcc-arm-none-eabi default-jre 
+# cross compilation et librairies perl pour l'outil de conversion
+# boardGen.pl : board.cfg -> board.h
+sudo apt install build-essential gcc-arm-none-eabi gdb-multiarch \
+         default-jre libmodern-perl-perl \
+	 libxml-libxml-perl libfile-which-perl \
+	 stlink-tools 
+	 
+sudo cpan -i String/LCSS.pm
 
-installation stm32cubemx depuis le site de stmicroelectronics
-https://www.st.com/en/development-tools/stm32cubemx.html
+# to use bmpflash : necessite de se delogger et relogger
+sudo usermod -a -G dialout $USER
+
+# installation stm32cubemx depuis le site de stmicroelectronics
+# https://www.st.com/en/development-tools/stm32cubemx.html
+# boardGen.pl a besoin des fichier xml de description des MCU
+
+# On commence par la première démo, la marche à suivre sera la même
+# pour les autres
+git clone --recursive https://github.com/alex31/dma_demos.git
+cd dma_demos/led_blink
+make -j4
+
+# si ce n'est déjà fait, brancher la carte discoveryF4 par USB
+# (connecteur mini- usb; celui de la sonde de programmation,
+# pas le connecteur micro-usb connecté au MCU.
+# La sonde de programmation fait monter un periphérique USB-Storage,
+# et il suffit de monter ce périphérique comme une clef USB et de copier
+# le fichier build/ch.bin dedans : le programme est aussitôt flashé et executé
 
