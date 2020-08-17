@@ -8,20 +8,16 @@
   designed to run on a STM32F407G-DISC1 board
  */
 
+#define STM32_UART_USART2_RX_DMA_STREAM  STM32_DMA_STREAM_ID(1, 5)
 #define STM32_UART_USART2_RX_DMA_CHANNEL 4U
 
 void dmaReceiveCb(DMADriver *dmap, void *buffer, const size_t n);
 
-static const UARTConfig uartConfig =  {
-				       .txend1_cb =NULL,
-				       .txend2_cb = NULL,
-				       .rxend_cb = NULL,
-				       .rxchar_cb = NULL,
-				       .rxerr_cb = NULL,
-				       .speed = 460800,
+static const SerialConfig uartConfig =  {
+				       .speed = 115200,
 				       .cr1 = 0,
-				       .cr2 = USART_CR2_STOP2_BITS,
-				       .cr3 = 0
+				       .cr2 = USART_CR2_STOP1_BITS,
+				       .cr3 = USART_CR3_DMAR
 };
   
 
@@ -88,8 +84,10 @@ int main(void) {
   // start the heartbeat task
   chThdCreateStatic(waBlinker, sizeof(waBlinker), NORMALPRIO, &blinker, NULL);
 
-  uartStart(&UARTD2, &uartConfig);
-  uartStop(&UARTD2);
+  sdStart(&SD2, &uartConfig);
+
+  SD2.usart->CR1 &= ~(USART_CR1_PEIE | USART_CR1_RXNEIE | USART_CR1_TXEIE |
+		      USART_CR1_TCIE);
   
   // initialize dma object
   dmaObjectInit(&dmap);
@@ -98,7 +96,7 @@ int main(void) {
   dmaStart(&dmap, &dmaConfig);
 
   // launch continous DMA transfert from memory to GPIO peripheral
-  dmaStartTransfert(&dmap, &UARTD2.usart->DR, usartBuf, DMA_BUFFER_LEN);
+  dmaStartTransfert(&dmap, &SD2.usart->DR, usartBuf, DMA_BUFFER_LEN);
 
   // start the interractive shell
   consoleLaunch();  
@@ -117,4 +115,5 @@ void dmaReceiveCb(DMADriver *dmap, void *buffer, const size_t n)
   (void) buffer;
   (void) n;
   palToggleLine(LINE_LED1);
+  SD2.usart->DR &= ~USART_CR3_DMAR;
 }
