@@ -10,30 +10,55 @@
 
 #define STM32_UART_USART2_RX_DMA_STREAM  STM32_DMA_STREAM_ID(1, 5)
 #define STM32_UART_USART2_RX_DMA_CHANNEL 4U
+#define STM32_UART_USART3_TX_DMA_STREAM  STM32_DMA_STREAM_ID(1, 3)
+#define STM32_UART_USART3_TX_DMA_CHANNEL 4U
 
-void dmaReceiveCb(DMADriver *dmap, void *buffer, const size_t n);
+void dmaReceiveCb(DMADriver *dmapRead, void *buffer, const size_t n);
 
-static const SerialConfig uartConfig =  {
+static const SerialConfig uartReadConfig =  {
 				       .speed = 115200,
 				       .cr1 = 0,
 				       .cr2 = USART_CR2_STOP1_BITS,
+				       // generate signal when USART
+				       // is ready to receive
 				       .cr3 = USART_CR3_DMAR
+};
+static const SerialConfig uartWriteConfig =  {
+				       .speed = 230400,
+				       .cr1 = 0,
+				       .cr2 = USART_CR2_STOP1_BITS,
+				       // generate signal when USART
+				       // is clear to send
+				       .cr3 = USART_CR3_DMAT
 };
   
 
 // dma configuration
-static const DMAConfig dmaConfig = {
+static const DMAConfig dmaConfigRead = {
        .stream = STM32_UART_USART2_RX_DMA_STREAM,
        .channel = STM32_UART_USART2_RX_DMA_CHANNEL,
        .dma_priority =  3, // low priority
        .irq_priority = 12, // low priority 
        .direction = DMA_DIR_P2M, // memory to peripheral
-       .psize = 1, // GPIO ODR register is 16 bits wide
+       .psize = 1, // usart manage bytes
        .msize = 1, // so we use same size for words in memory
        .inc_peripheral_addr = false, // always update ODR and no other registers
        .inc_memory_addr = true, // increment memory pointer
        .circular = true, // continuous transaction
        .end_cb = &dmaReceiveCb
+};
+static const DMAConfig dmaConfigWrite = {
+       .stream = STM32_UART_USART3_TX_DMA_STREAM,
+       .channel = STM32_UART_USART3_TX_DMA_CHANNEL,
+       .dma_priority =  3, // low priority
+       .irq_priority = 12, // low priority 
+       .direction = DMA_DIR_M2P, // memory to peripheral
+       .psize = 1, // usart manage bytes
+       .msize = 1, // so we use same size for words in memory
+       .inc_peripheral_addr = false, // always update ODR and no other registers
+       .inc_memory_addr = true, // increment memory pointer
+       .circular = false, // continuous transaction
+       .end_cb = NULL
 };
 
 // an heartbeat task which prove that the system is alive
@@ -59,8 +84,11 @@ static void blinker (void *arg)
 // remove the const keyword and the memory buffer will be in ram
 // dma buffer should be at least 32 bits aligned, and even more
 // when burst is used
-#define DMA_BUFFER_LEN	4U
+#define DMA_BUFFER_LEN	64U
 static  uint8_t usartBuf[DMA_BUFFER_LEN] __attribute__((aligned(4)));
+
+// theses objects will manage a stream of a dma controller
+DMADriver dmapRead, dmapWrite;
 
 
 int main(void) {
@@ -75,36 +103,33 @@ int main(void) {
   halInit();
   chSysInit();
 
-  // this object will manage a stream of a dma controller
-  DMADriver dmap;
-
   // start the UART associated to the interractive shell
   consoleInit();
 
   // start the heartbeat task
   chThdCreateStatic(waBlinker, sizeof(waBlinker), NORMALPRIO, &blinker, NULL);
 
-  sdStart(&SD2, &uartConfig);
+  sdStart(&SD2, &uartReadConfig);
+  sdStart(&SD3, &uartWriteConfig);
 
   SD2.usart->CR1 &= ~(USART_CR1_PEIE | USART_CR1_RXNEIE | USART_CR1_TXEIE |
 		      USART_CR1_TCIE);
+  SD3.usart->CR1 &= ~(USART_CR1_PEIE | USART_CR1_RXNEIE | USART_CR1_TXEIE |
+		      USART_CR1_TCIE);
   
   // initialize dma object
-  dmaObjectInit(&dmap);
+  dmaObjectInit(&dmapRead);
+  dmaObjectInit(&dmapWrite);
 
-  // start dma peripheral
-  dmaStart(&dmap, &dmaConfig);
+  // start dma peripherals
+  dmaStart(&dmapRead, &dmaConfigRead);
+  dmaStart(&dmapWrite, &dmaConfigWrite);
 
   // launch continous DMA transfert from memory to GPIO peripheral
-  dmaStartTransfert(&dmap, &SD2.usart->DR, usartBuf, DMA_BUFFER_LEN);
+  dmaStartTransfert(&dmapRead, &SD2.usart->DR, usartBuf, DMA_BUFFER_LEN);
 
   // start the interractive shell
   consoleLaunch();  
-
-  // wait until user pushes blue button
-  while (palReadLine(LINE_BLUE_BUTTON) == PAL_HIGH) {
-    chThdSleepMilliseconds(10);
-  }
 
   chThdSleep(TIME_INFINITE);
 }
@@ -112,8 +137,12 @@ int main(void) {
 void dmaReceiveCb(DMADriver *dmap, void *buffer, const size_t n)
 {
   (void) dmap;
-  (void) buffer;
-  (void) n;
+  
+  chSysLockFromISR();
   palToggleLine(LINE_LED1);
   SD2.usart->DR &= ~USART_CR3_DMAR;
+  if (dmaGetState(&dmapWrite) == DMA_READY) {
+    dmaStartTransfertI(&dmapWrite, &SD3.usart->DR, buffer, n);
+  }
+  chSysUnlockFromISR();
 }
