@@ -3,6 +3,7 @@
 #include "stdutil.h"
 #include "ttyConsole.h"
 #include "hal_stm32_dma.h"
+#include <string.h>
 
 /*
   designed to run on a STM32F407G-DISC1 board
@@ -24,7 +25,7 @@ static const SerialConfig uartReadConfig =  {
 				       .cr3 = USART_CR3_DMAR
 };
 static const SerialConfig uartWriteConfig =  {
-				       .speed = 230400,
+				       .speed = 19200,
 				       .cr1 = 0,
 				       .cr2 = USART_CR2_STOP1_BITS,
 				       // generate signal when USART
@@ -84,12 +85,16 @@ static void blinker (void *arg)
 // remove the const keyword and the memory buffer will be in ram
 // dma buffer should be at least 32 bits aligned, and even more
 // when burst is used
-#define DMA_BUFFER_LEN	64U
-static  uint8_t usartBuf[DMA_BUFFER_LEN] __attribute__((aligned(4)));
+#define DMA_BUFFER_SIZE	64U
+#define HALF_DMA_BUFFER_SIZE (DMA_BUFFER_SIZE / 2U)
+#define QUEUE_LEN	32U
+static  uint8_t usartBuf[DMA_BUFFER_SIZE] __attribute__((aligned(4)));
 
 // theses objects will manage a stream of a dma controller
 DMADriver dmapRead, dmapWrite;
 
+static uint8_t readWriteBuffer[HALF_DMA_BUFFER_SIZE * QUEUE_LEN];
+static input_buffers_queue_t readWriteQueue;
 
 int main(void) {
 
@@ -103,6 +108,11 @@ int main(void) {
   halInit();
   chSysInit();
 
+  
+  ibqObjectInit(&readWriteQueue, false, readWriteBuffer,
+		HALF_DMA_BUFFER_SIZE, QUEUE_LEN,
+		NULL, NULL);
+  
   // start the UART associated to the interractive shell
   consoleInit();
 
@@ -126,23 +136,34 @@ int main(void) {
   dmaStart(&dmapWrite, &dmaConfigWrite);
 
   // launch continous DMA transfert from memory to GPIO peripheral
-  dmaStartTransfert(&dmapRead, &SD2.usart->DR, usartBuf, DMA_BUFFER_LEN);
+  dmaStartTransfert(&dmapRead, &SD2.usart->DR, usartBuf, DMA_BUFFER_SIZE);
 
   // start the interractive shell
-  consoleLaunch();  
+  consoleLaunch();
 
-  chThdSleep(TIME_INFINITE);
+  // read the input queue and send stream at different baud rate in thread
+  // context
+  uint8_t rb[HALF_DMA_BUFFER_SIZE];
+  while (true) {
+    palToggleLine(LINE_LED1);
+    const msg_t n = ibqReadTimeout(&readWriteQueue, rb, sizeof(rb),
+				   TIME_INFINITE);
+    chDbgAssert(n != 0, "ibqReadTimeout");
+    dmaTransfert(&dmapWrite, &SD3.usart->DR, rb, sizeof(rb));
+  }
 }
 
 void dmaReceiveCb(DMADriver *dmap, void *buffer, const size_t n)
 {
   (void) dmap;
-  
+  (void) buffer;
   chSysLockFromISR();
-  palToggleLine(LINE_LED1);
   SD2.usart->DR &= ~USART_CR3_DMAR;
-  if (dmaGetState(&dmapWrite) == DMA_READY) {
-    dmaStartTransfertI(&dmapWrite, &SD3.usart->DR, buffer, n);
+  uint8_t * const qbuf = ibqGetEmptyBufferI(&readWriteQueue);
+  if (qbuf != NULL) {
+    memcpy(qbuf, buffer, n);
+    ibqPostFullBufferI(&readWriteQueue, n);
   }
   chSysUnlockFromISR();
 }
+
