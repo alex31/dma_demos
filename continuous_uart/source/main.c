@@ -94,7 +94,7 @@ static  uint8_t usartBuf[DMA_BUFFER_SIZE] __attribute__((aligned(4)));
 DMADriver dmapRead, dmapWrite;
 
 static uint8_t readWriteBuffer[HALF_DMA_BUFFER_SIZE * QUEUE_LEN];
-static input_buffers_queue_t readWriteQueue;
+static input_queue_t readWriteQueue;
 
 int main(void) {
 
@@ -109,9 +109,9 @@ int main(void) {
   chSysInit();
 
   
-  ibqObjectInit(&readWriteQueue, false, readWriteBuffer,
-		HALF_DMA_BUFFER_SIZE, QUEUE_LEN,
-		NULL, NULL);
+  iqObjectInit(&readWriteQueue, readWriteBuffer,
+	       sizeof usartBuf ,
+	       NULL, NULL);
   
   // start the UART associated to the interractive shell
   consoleInit();
@@ -146,8 +146,8 @@ int main(void) {
   uint8_t rb[HALF_DMA_BUFFER_SIZE];
   while (true) {
     palToggleLine(LINE_LED1);
-    const msg_t n = ibqReadTimeout(&readWriteQueue, rb, sizeof(rb),
-				   TIME_INFINITE);
+    const msg_t n = iqReadTimeout(&readWriteQueue, rb, sizeof(rb),
+				  TIME_INFINITE);
     chDbgAssert(n != 0, "ibqReadTimeout");
     dmaTransfert(&dmapWrite, &SD3.usart->DR, rb, sizeof(rb));
   }
@@ -157,13 +157,13 @@ void dmaReceiveCb(DMADriver *dmap, void *buffer, const size_t n)
 {
   (void) dmap;
   (void) buffer;
-  chSysLockFromISR();
+
   SD2.usart->DR &= ~USART_CR3_DMAR;
-  uint8_t * const qbuf = ibqGetEmptyBufferI(&readWriteQueue);
-  if (qbuf != NULL) {
-    memcpy(qbuf, buffer, n);
-    ibqPostFullBufferI(&readWriteQueue, n);
-  }
+  chSysLockFromISR();
+
+  for (size_t i=0; i<n; i++)
+    iqPutI(&readWriteQueue, ((uint8_t *)buffer)[i]);
+  
   chSysUnlockFromISR();
 }
 
