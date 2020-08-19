@@ -14,18 +14,18 @@
 #define STM32_UART_USART3_TX_DMA_STREAM  STM32_DMA_STREAM_ID(1, 3)
 #define STM32_UART_USART3_TX_DMA_CHANNEL 4U
 
-void dmaReceiveCb(DMADriver *dmapRead, void *buffer, const size_t n);
+static void dmaReceiveCb(DMADriver *dmapRead, void *buffer, const size_t n);
 
 static const SerialConfig uartReadConfig =  {
 				       .speed = 115200,
 				       .cr1 = 0,
 				       .cr2 = USART_CR2_STOP1_BITS,
 				       // generate signal when USART
-				       // is ready to receive
+				       // has received a byte
 				       .cr3 = USART_CR3_DMAR
 };
 static const SerialConfig uartWriteConfig =  {
-				       .speed = 19200,
+				       .speed = 230400,
 				       .cr1 = 0,
 				       .cr2 = USART_CR2_STOP1_BITS,
 				       // generate signal when USART
@@ -153,10 +153,9 @@ int main(void) {
   }
 }
 
-void dmaReceiveCb(DMADriver *dmap, void *buffer, const size_t n)
+static void dmaReceiveCb(DMADriver *dmap, void *buffer, const size_t n)
 {
   (void) dmap;
-  (void) buffer;
 
   SD2.usart->DR &= ~USART_CR3_DMAR;
   chSysLockFromISR();
