@@ -10,11 +10,20 @@
   designed to run on a STM32F407G-DISC1 board
  */
 
+/* ALL timers channels that are DMA capable:
+   T1:4, T2:4, T3:4, T4:5, T5:4, T8:4
+   So 24 possible channels with 512 leds each : 12288 leds !
+
+ */
+
+
+#define NB_CHANNELS 1U // between 1 and 4
+
 // cf tables 42 and 43, page 309 of stm32f4 reference manuel : RM0090
 #define STM32_TIM1_UP_DMA_STREAM                STM32_DMA_STREAM_ID(2, 5)
 #define STM32_TIM1_UP_DMA_CHANNEL               6
 
-#define STRIP_NB_LEDS 8U // depend of your strip, mine has 8 leds
+#define STRIP_NB_LEDS 8U // depend of your strip, mine has 8 leds, up to 512
 
 typedef struct  {
   uint16_t g[8]; // color is to be sent in this order : 
@@ -24,9 +33,17 @@ typedef struct  {
 
 typedef struct {
   uint16_t start[2]; // work around DMA latency on two first transfert
-  Ws2812LedFrame leds[STRIP_NB_LEDS]; // each bit is represented by duration coded with two bytes
+  Ws2812LedFrame leds[STRIP_NB_LEDS * NB_CHANNELS]; // each bit is represented by duration coded with two bytes
   uint16_t end[2]; // always 0 to terminate a frame
 } Ws2812StripFrame;
+
+typedef enum  {SEND_COLORS, SEND_INTERFRAME} SerializeState;
+
+typedef struct {
+  Ws2812StripFrame frame;
+  SerializeState state;
+  uint16_t	 stateCnt;
+} Ws2812Strip;
 
 typedef struct {
   uint8_t r;
@@ -45,7 +62,7 @@ static const Color purple = {100, 0, 100};
 static const Color dimmed = {10, 10, 10};    
 
 // be sure that compiler do not insert padding
-_Static_assert(sizeof(Ws2812StripFrame) == ((24 * STRIP_NB_LEDS) + 4) * 2);
+_Static_assert(sizeof(Ws2812StripFrame) == ((24 * STRIP_NB_LEDS * NB_CHANNELS) + 4) * 2);
 
 // fonction that generate dma frame from rgb color for one led
 static void setColors(Ws2812StripFrame *ledStrip,
@@ -80,9 +97,15 @@ static const PWMConfig  pwmCfg = {
 	    .callback  = NULL,             
 	    .channels  = {
 			  {.mode = PWM_OUTPUT_ACTIVE_HIGH, .callback = NULL},
-			  {.mode = PWM_OUTPUT_DISABLED, .callback = NULL},
-			  {.mode = PWM_OUTPUT_DISABLED, .callback = NULL},
-			  {.mode = PWM_OUTPUT_DISABLED, .callback = NULL},
+			  {.mode =  NB_CHANNELS > 1U ? PWM_OUTPUT_ACTIVE_HIGH :
+			   PWM_OUTPUT_DISABLED,
+			   .callback = NULL},
+			  {.mode =  NB_CHANNELS > 2U ? PWM_OUTPUT_ACTIVE_HIGH :
+			   PWM_OUTPUT_DISABLED,
+			   .callback = NULL},
+			  {.mode =  NB_CHANNELS > 3U ? PWM_OUTPUT_ACTIVE_HIGH :
+			   PWM_OUTPUT_DISABLED,
+			   .callback = NULL}
 			  },
 	    .dier =  STM32_TIM_DIER_UDE // Update DMA request enable
 };
@@ -116,9 +139,13 @@ int main(void) {
    * - Kernel initialization, the main() function becomes a thread and the
    *   RTOS is active.
    */
-  Ws2812StripFrame ledStrip = {0};
-  const Color	colorArraySource[STRIP_NB_LEDS] =
-    {red, green, blue, yellow, white, cyan, purple, dimmed};
+  Ws2812Strip ledStrip = {
+			  .frame = {{0}},
+			  .state = SEND_COLORS,
+			  .stateCnt = 0};
+  
+  const Color	colorArraySource[NB_CHANNELS][STRIP_NB_LEDS] =
+    {{red, green, blue, yellow, white, cyan, purple, dimmed}};
 
   halInit();
   chSysInit();
@@ -152,21 +179,24 @@ int main(void) {
   // loop through animation
   float angle=0.0f;
   while (true) {
-    Color colorArray[STRIP_NB_LEDS];
+    Color colorArray[NB_CHANNELS][STRIP_NB_LEDS];
+    _Static_assert(sizeof(colorArray) == sizeof(colorArraySource), "source dest not same size");
     memcpy(&colorArray, &colorArraySource, sizeof(colorArraySource));
     float sina = sinf(angle);
     sina *= sina; // always positive range from 0 to 1 
     // dimming the leds together following a sine curve
-    for (size_t i=0; i<STRIP_NB_LEDS; i++) {
-      colorArray[i].r *= sina;
-      colorArray[i].g *= sina;
-      colorArray[i].b *= sina;
-      setColors(&ledStrip, i, colorArray[i]);
+    for (size_t i=0; i<NB_CHANNELS; i++) {
+      for (size_t j=0; j<STRIP_NB_LEDS; j++) {
+	colorArray[i][j].r *= sina;
+	colorArray[i][j].g *= sina;
+	colorArray[i][j].b *= sina;
+	setColors(&ledStrip.frame, j+(i*NB_CHANNELS), colorArray[i][j]);
+      }
     }
 
     // send the frame to the led strip
-    dmaTransfert(&dmap, &PWMD1.tim->CCR, &ledStrip,
-		 sizeof(ledStrip) / sizeof(uint16_t));
+    dmaTransfert(&dmap, &PWMD1.tim->CCR, ledStrip.frame.start,
+		 sizeof(ledStrip.frame) / sizeof(uint16_t));
     chThdSleepMilliseconds(10); // 100 hz
     angle = fmod(angle += 0.05f, 3.141592f);
   }
@@ -179,8 +209,10 @@ static void setColor(const uint8_t col,
 {
   // each bit is serialised with pulde width
   // MSB is serialised first
+  //  DebugTrace("bitArray@%p = %u", bitArray, col);
   for (size_t i=0; i<8; i++)
     bitArray[i] = col & (1U<<(7U-i)) ?  WS_T1H : WS_T0H;
+  
 }
 
 static void setColors(Ws2812StripFrame *ledStrip,
