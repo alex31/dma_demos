@@ -16,13 +16,16 @@
  */
 
 
-#define NB_CHANNELS 4U // between 1 and 4
+#define NB_CHANNELS 4U // between 1 and 4 : number of strips plugged
 
 // cf tables 42 and 43, page 309 of stm32f4 reference manuel : RM0090
 #define STM32_TIM1_UP_DMA_STREAM                STM32_DMA_STREAM_ID(2, 5)
 #define STM32_TIM1_UP_DMA_CHANNEL               6
 
 #define STRIP_NB_LEDS 8U // depend of your strip, mine has 8 leds, up to 512
+#define DMABUF_NB_LEDS 24U
+#define DMABUF_HALF_NB_LEDS (DMABUF_NB_LEDS/2)
+#define INTERFRAME_DURATION 10U // 10 frames = 240 bits @ 1.25µs = 300µs
 
 typedef struct  {
   uint16_t g[8][NB_CHANNELS]; // color is to be sent in this order : 
@@ -30,21 +33,18 @@ typedef struct  {
   uint16_t b[8][NB_CHANNELS];
 } Ws2812LedFrame;
 
-typedef struct {
-  // always 0 to work around DMA latency silicon bug on first world
-  uint16_t start[NB_CHANNELS];
-  // each bit is represented  by duration coded with two bytes
-  Ws2812LedFrame leds[STRIP_NB_LEDS];
-  // always 0 to terminate a frame
-  uint16_t end[NB_CHANNELS]; 
-} Ws2812StripFrame;
 
 typedef enum  {SEND_COLORS, SEND_INTERFRAME} SerializeState;
 
 typedef struct {
-  Ws2812StripFrame frame;
+  Ws2812LedFrame frame[DMABUF_NB_LEDS];
   SerializeState state;
-  uint16_t	 stateCnt;
+  // depending on state, store interFrame index, or led index in the
+  // color array
+  union {
+    uint16_t interFrameSent;
+    uint16_t ledIdx;
+  };
 } Ws2812Strip;
 
 typedef struct {
@@ -53,6 +53,8 @@ typedef struct {
   uint8_t b;
 } Color;
 
+static volatile uint64_t totalNbCycles = 0U;
+static volatile uint64_t nbIsr = 0U;
 
 static const Color red = {100, 0, 0};   
 static const Color green = {0, 100, 0};   
@@ -63,15 +65,12 @@ static const Color cyan = {0, 100, 100};
 static const Color purple = {100, 0, 100};  
 static const Color dimmed = {10, 10, 10};    
 
-// be sure that compiler do not insert padding
-_Static_assert(sizeof(Ws2812StripFrame) ==
-	       ((24 * STRIP_NB_LEDS * NB_CHANNELS) + NB_CHANNELS * 2) * 2);
-
 // fonction that generate dma frame from rgb color for one led
-static void setColors(Ws2812StripFrame *ledStrip,
-		      const uint8_t ledIdx,
+static void setColors(Ws2812LedFrame *ledFrame,
 		      const uint8_t chanIdx,
 		      const Color rgb);
+
+static void dmaHalfCb(DMADriver *dmap, void *buffer, const size_t n);
 
 // dma configuration
 static const DMAConfig dmaConfig = {
@@ -84,7 +83,8 @@ static const DMAConfig dmaConfig = {
        .msize = 2, // so we use same size for words in memory
        .inc_peripheral_addr = false, // always update ODR and no other registers
        .inc_memory_addr = true, // increment memory pointer
-       .circular = false // one shot transaction
+       .circular = true, // one shot transaction
+       .end_cb = &dmaHalfCb // call each time half buffer has been sent
 };
 
 
@@ -92,7 +92,6 @@ static const DMAConfig dmaConfig = {
 #define WS_T0H    33U
 #define WS_T1H    67U
 #define WS_PERIOD 105U
-#define WS_INTERFRAME_GAP_MILLISECOND 1U
 
 // pwm configuration
 /* DBL: this 5-bit vector defines the number of DMA transfers 
@@ -147,9 +146,19 @@ static void blinker (void *arg)
     chThdSleepMilliseconds(20);
     GPIOD->ODR ^= 0b1111000000000000;
     chThdSleepMilliseconds(980);
+    DebugTrace("ISR take %ld µs",
+	       (uint32_t) RTC2US(STM32_HCLK, totalNbCycles/nbIsr));
   }
 }
 
+static Ws2812Strip ledStrip;
+static const Color colorArraySource[NB_CHANNELS][STRIP_NB_LEDS] =
+  {{red, green, blue, yellow, white, cyan, purple, dimmed},
+   {green, blue, yellow, green, blue, yellow, green, blue},
+   {cyan, purple, cyan, purple, cyan, purple, cyan, purple},
+   {white, dimmed, white, dimmed, white, dimmed, white, dimmed}
+  };
+static Color colorArray[NB_CHANNELS][STRIP_NB_LEDS] ;
 
 int main(void) {
 
@@ -160,18 +169,11 @@ int main(void) {
    * - Kernel initialization, the main() function becomes a thread and the
    *   RTOS is active.
    */
-  Ws2812Strip ledStrip = {
-			  .frame = {{0}},
-			  .state = SEND_COLORS,
-			  .stateCnt = 0};
+  memset(&ledStrip, 0, sizeof(ledStrip));
+  ledStrip.state = SEND_COLORS;
   
-  const Color	colorArraySource[NB_CHANNELS][STRIP_NB_LEDS] =
-    {{red, green, blue, yellow, white, cyan, purple, dimmed},
-     {green, blue, yellow, green, blue, yellow, green, blue},
-     {cyan, purple, cyan, purple, cyan, purple, cyan, purple},
-     {white, dimmed, white, dimmed, white, dimmed, white, dimmed}
-    };
-
+  
+ 
   halInit();
   chSysInit();
 
@@ -204,31 +206,38 @@ int main(void) {
 
   // start the interractive shell
   consoleLaunch();  
+
+  // send the frame to the led strip
+  dmaStartTransfert(&dmap, &PWMD1.tim->DMAR, ledStrip.frame,
+		    sizeof(ledStrip.frame) / sizeof(uint16_t));
+  
   
   // loop through animation
   float angle=0.0f;
   while (true) {
+    memcpy(colorArray, colorArraySource, sizeof(colorArraySource));
     float sina = sinf(angle);
     sina *= sina; // always positive range from 0 to 1 
     // dimming the leds together following a sine curve
     for (size_t i=0; i<STRIP_NB_LEDS; i++) {
       for (size_t j=0; j<NB_CHANNELS; j++) {
-	Color col = colorArraySource[j][i];
-	col.r *= sina;
-	col.g *= sina;
-	col.b *= sina;
-	setColors(&ledStrip.frame, i, j, col);
+	Color *col = &colorArray[j][i];
+	col->r *= sina;
+	col->g *= sina;
+	col->b *= sina;
       }
     }
     
-    // send the frame to the led strip
-    dmaTransfert(&dmap, &PWMD1.tim->DMAR, ledStrip.frame.start,
-		 sizeof(ledStrip.frame) / sizeof(uint16_t));
     chThdSleepMilliseconds(10); // 100 hz
     angle = fmod(angle += 0.05f, 3.141592f);
   }
  }
 
+
+static void setInterFrameSilent(Ws2812LedFrame* aFrame)
+{
+  memset(aFrame, 0, sizeof(Ws2812LedFrame));
+}
 
 typedef uint16_t (*ColorBitsArray)[NB_CHANNELS];
 static void setColor(const uint8_t col,
@@ -242,14 +251,40 @@ static void setColor(const uint8_t col,
     bitArray[i][chanIdx] = col & (1U<<(7U-i)) ?  WS_T1H : WS_T0H;
 }
 
-static void setColors(Ws2812StripFrame *ledStrip,
-		      const uint8_t ledIdx,
+static void setColors(Ws2812LedFrame *ledFrame,
 		      const uint8_t chanIdx,
 		      const Color rgb)
 {
-  Ws2812LedFrame * const led = &ledStrip->leds[ledIdx];
-  setColor(rgb.g, chanIdx, led->g);
-  setColor(rgb.r, chanIdx, led->r);
-  setColor(rgb.b, chanIdx, led->b);
+  setColor(rgb.g, chanIdx, ledFrame->g);
+  setColor(rgb.r, chanIdx, ledFrame->r);
+  setColor(rgb.b, chanIdx, ledFrame->b);
 }
 
+
+static void dmaHalfCb(DMADriver *dmap, void *buffer, const size_t n)
+{
+  (void) dmap;
+  (void) n;
+  uint32_t cntStamp =  chSysGetRealtimeCounterX();
+  Ws2812LedFrame * const halfFrame =  (Ws2812LedFrame *) buffer;
+  for (size_t i=0U; i < DMABUF_HALF_NB_LEDS; i++) {
+    if (ledStrip.state == SEND_INTERFRAME) {
+      setInterFrameSilent(&halfFrame[i]);
+      if (++ledStrip.interFrameSent >= INTERFRAME_DURATION) {
+	ledStrip.state = SEND_COLORS;
+	ledStrip.ledIdx = 0U;
+      } 
+    } else {
+      for (size_t j=0; j<NB_CHANNELS; j++) {
+	Color col = colorArray[j][ledStrip.ledIdx];
+      	setColors(&halfFrame[i], j, col);
+      }
+      if (++ledStrip.ledIdx >= STRIP_NB_LEDS) {
+	ledStrip.state = SEND_INTERFRAME;
+	ledStrip.interFrameSent = 0U;
+      }
+    }
+  }
+  totalNbCycles += (chSysGetRealtimeCounterX() - cntStamp);
+  nbIsr++;
+}
