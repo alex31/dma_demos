@@ -208,21 +208,19 @@ int main(void) {
   // loop through animation
   float angle=0.0f;
   while (true) {
-    Color colorArray[NB_CHANNELS][STRIP_NB_LEDS];
-    _Static_assert(sizeof(colorArray) == sizeof(colorArraySource), "source dest not same size");
-    memcpy(&colorArray, &colorArraySource, sizeof(colorArraySource));
     float sina = sinf(angle);
     sina *= sina; // always positive range from 0 to 1 
     // dimming the leds together following a sine curve
-    for (size_t i=0; i<NB_CHANNELS; i++) {
-      for (size_t j=0; j<STRIP_NB_LEDS; j++) {
-	colorArray[i][j].r *= sina;
-	colorArray[i][j].g *= sina;
-	colorArray[i][j].b *= sina;
-	setColors(&ledStrip.frame, j, i, colorArray[i][j]);
+    for (size_t i=0; i<STRIP_NB_LEDS; i++) {
+      for (size_t j=0; j<NB_CHANNELS; j++) {
+	Color col = colorArraySource[j][i];
+	col.r *= sina;
+	col.g *= sina;
+	col.b *= sina;
+	setColors(&ledStrip.frame, i, j, col);
       }
     }
-
+    
     // send the frame to the led strip
     dmaTransfert(&dmap, &PWMD1.tim->DMAR, ledStrip.frame.start,
 		 sizeof(ledStrip.frame) / sizeof(uint16_t));
