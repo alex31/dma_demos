@@ -51,7 +51,7 @@
 
 #define   STM32_DMA_REQUIRED        TRUE
 #undef STM32_DMA_DRIVER_EXT_INIT_HOOK
-
+#define   STM32_DMA_DRIVER_USER_DATA_FIELD TRUE
 /**
  * @brief   Enables the PAL subsystem.
  */
