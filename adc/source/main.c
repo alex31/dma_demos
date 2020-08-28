@@ -82,9 +82,9 @@ int main(void) {
   // start the interractive shell
   consoleLaunch();  
 
-  // until user pushes blue button, make oneshot conversion in loop
-  while (palReadLine(LINE_BLUE_BUTTON) == PAL_HIGH) {
-    oneShotAdc();
+  // wait until user pushes blue button
+  while (palReadLine(LINE_BLUE_BUTTON) == PAL_LOW) {
+    chThdSleepMilliseconds(10);
   }
 
   // then use continuous API
