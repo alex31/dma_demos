@@ -117,7 +117,7 @@ int main(void) {
   consoleLaunch();  
 
   // wait until user pushes blue button
-  while (palReadLine(LINE_BLUE_BUTTON) == PAL_HIGH) {
+  while (palReadLine(LINE_BLUE_BUTTON) == PAL_LOW) {
     chThdSleepMilliseconds(10);
   }
 
