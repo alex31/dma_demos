@@ -119,10 +119,10 @@ int main(void) {
   // start the heartbeat task
   chThdCreateStatic(waBlinker, sizeof(waBlinker), NORMALPRIO, &blinker, NULL);
 
-  sdStart(&SD2, &uartReadConfig);
+  sdStart(&SD1, &uartReadConfig);
   sdStart(&SD3, &uartWriteConfig);
 
-  SD2.usart->CR1 &= ~(USART_CR1_PEIE | USART_CR1_RXNEIE | USART_CR1_TXEIE |
+  SD1.usart->CR1 &= ~(USART_CR1_PEIE | USART_CR1_RXNEIE | USART_CR1_TXEIE |
 		      USART_CR1_TCIE);
   SD3.usart->CR1 &= ~(USART_CR1_PEIE | USART_CR1_RXNEIE | USART_CR1_TXEIE |
 		      USART_CR1_TCIE);
@@ -136,7 +136,7 @@ int main(void) {
   dmaStart(&dmapWrite, &dmaConfigWrite);
 
   // launch continous DMA transfert from memory to GPIO peripheral
-  dmaStartTransfert(&dmapRead, &SD2.usart->DR, usartBuf, DMA_BUFFER_SIZE);
+  dmaStartTransfert(&dmapRead, &SD1.usart->DR, usartBuf, DMA_BUFFER_SIZE);
 
   // start the interractive shell
   consoleLaunch();
@@ -157,7 +157,7 @@ static void dmaReceiveCb(DMADriver *dmap, void *buffer, const size_t n)
 {
   (void) dmap;
 
-  SD2.usart->DR &= ~USART_CR3_DMAR;
+  SD1.usart->DR &= ~USART_CR3_DMAR;
   chSysLockFromISR();
 
   for (size_t i=0; i<n; i++)

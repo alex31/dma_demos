@@ -260,8 +260,8 @@
 /*
  * SERIAL driver system settings.
  */
-#define STM32_SERIAL_USE_USART1             TRUE
-#define STM32_SERIAL_USE_USART2             FALSE
+#define STM32_SERIAL_USE_USART1             FALSE
+#define STM32_SERIAL_USE_USART2             TRUE
 #define STM32_SERIAL_USE_USART3             FALSE
 #define STM32_SERIAL_USE_UART4              FALSE
 #define STM32_SERIAL_USE_UART5              FALSE
@@ -352,7 +352,7 @@
 
 #define CH_HEAP_SIZE (32*1024)
 #define CH_HEAP_USE_TLSF 0 // if 0 or undef, chAlloc will be used
-#define CONSOLE_DEV_SD SD1
+#define CONSOLE_DEV_SD SD2
 #define CONSOLE_DEV_USB FALSE
 //#define CHPRINTF_USE_STDLIB             1
 
