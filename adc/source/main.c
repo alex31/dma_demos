@@ -9,8 +9,8 @@
  */
 
 // see STM32F4 datasheet page 139, table 73
-#define VREF_NOMINAL	3.3f
-#define VREF_INT_CALIBRATION    (*((uint16_t *) 0x1FFF7A2A))
+#define VREF_CALIB	1.21f
+#define SAMPLE_MAX	4095U
 #define ADC_GRP1_NUM_CHANNELS   2
 #define ADC_GRP1_BUF_DEPTH      128
 static adcsample_t samples[ADC_GRP1_NUM_CHANNELS * ADC_GRP1_BUF_DEPTH];
@@ -84,7 +84,7 @@ int main(void) {
 
   // wait until user pushes blue button
   while (palReadLine(LINE_BLUE_BUTTON) == PAL_LOW) {
-    chThdSleepMilliseconds(10);
+    oneShotAdc();
   }
 
   // then use continuous API
@@ -100,7 +100,7 @@ int main(void) {
 
   // display average value calculated in ISR
   while(TRUE) {
-    DebugTrace("[CONTINUOUS][%u] vdda = %.2f, core temp = %.1f",
+    DebugTrace("[CONTINUOUS][%u] vdd = %.2f, core temp = %.1f",
 	       isrCalledCount, vddaSetInISR, coreTempSetInISR);
     chThdSleepMilliseconds(1000);
   }
@@ -123,7 +123,7 @@ static void oneShotAdc(void)
   const float vdda = vddaFromVref(vddaAccumSamples / ADC_GRP1_BUF_DEPTH);
   const float coreTemp = scaleTemp(coreTempAccumSamples / ADC_GRP1_BUF_DEPTH,
 				   vdda);
-  DebugTrace("vdda = %.2f, core temp = %.1f", vdda, coreTemp);
+  DebugTrace("vdd = %.2f, core temp = %.1f", vdda, coreTemp);
   
   chThdSleepMilliseconds(1000);
 }
@@ -147,7 +147,7 @@ static float scaleTemp (const int sensorSample, const float _vdda)
 
 static float vddaFromVref(const int vrefSample)
 {
-  return VREF_NOMINAL * vrefSample / VREF_INT_CALIBRATION;
+  return (SAMPLE_MAX * VREF_CALIB) / vrefSample;
 }
 
 static void adcContinuousCB(ADCDriver *adcp)
