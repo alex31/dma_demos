@@ -71,10 +71,10 @@ static void blinker (void *arg)
   chRegSetThreadName("blinker");
   
   while (true) {
-    // briefly flash the 4 LEDs as an heartbeat signal
-    GPIOD->ODR ^= 0b1111000000000000;
+    // briefly flash 2 LEDs as an heartbeat signal
+    GPIOD->ODR ^= 0b1100000000000000;
     chThdSleepMilliseconds(20);
-    GPIOD->ODR ^= 0b1111000000000000;
+    GPIOD->ODR ^= 0b1100000000000000;
     chThdSleepMilliseconds(980);
   }
 }
