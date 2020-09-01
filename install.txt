@@ -1,9 +1,14 @@
+# Marche à suivre pour installer les outils de developpement sur
+# une machine ubuntu
+
+
+
 # cross compilation et librairies perl pour l'outil de conversion
 # boardGen.pl : board.cfg -> board.h
 sudo apt install build-essential gcc-arm-none-eabi gdb-multiarch \
          default-jre libmodern-perl-perl \
 	 libxml-libxml-perl libfile-which-perl \
-	 stlink-tools 
+	 stlink-tools screen openocd
 	 
 sudo cpan -i String/LCSS.pm
 
@@ -14,16 +19,48 @@ sudo usermod -a -G dialout $USER
 # https://www.st.com/en/development-tools/stm32cubemx.html
 # boardGen.pl a besoin des fichier xml de description des MCU
 
-# On commence par la première démo, la marche à suivre sera la même
-# pour les autres
+
+# clone du depot contenant les exemples, et des sous modules :
+# chibios, et un ensemble de librairies utilitaires developpées à
+# l'Ecole Nationale de l'Aviation Civile
 git clone --recursive https://github.com/alex31/dma_demos.git
+
+
+# La première démo fait, via DMA, un chenillard avec les 4 LEDs soudées sur la carte
+# discoveryf4. Une tâche fait périodiquement flasher les 4 leds d'un coup toute ls secondes.
+# Après un appui sur le bouton USER bleu, Chibios est stoppé : le flash périodique s'arrète, mais le
+# DMA continue d'animer le chenillard sans intervention du CPU qui est arreté.
 cd dma_demos/led_blink
 make -j4
+# brancher la carte, monter le disque USB DIS_F407VG, puis flasher le binaire :
+cp build/ch.bin /mnt/media/xxx/DIS_F407VG
 
-# si ce n'est déjà fait, brancher la carte discoveryF4 par USB
-# (connecteur mini- usb; celui de la sonde de programmation,
-# pas le connecteur micro-usb connecté au MCU.
-# La sonde de programmation fait monter un periphérique USB-Storage,
-# et il suffit de monter ce périphérique comme une clef USB et de copier
-# le fichier build/ch.bin dedans : le programme est aussitôt flashé et executé
+# la deuxième démo fait de l'acquition par l'ADC de 2 sources internes : la reference interne de 1.21V,
+# et la termistance qui mesure la temperature du coeur. Le pgm commence par faire de l'acquisition
+# one shot, puis après un appui sur le bouton USER bleu, fait de l'acquisition continue :
+cd ../adc
+make -j4
+# brancher la carte, monter le disque USB DIS_F407VG, puis flasher le binaire :
+# si dans une machine virtuelle : transferer la sonde de prog vers la machine virtuelle :
+# menu VM -> Removable Device ->STMicroelectronics STM32 STLink -> Connect 
+cp build/ch.bin /mnt/media/xxx/DIS_F407VG
+#lancer un terminal pour lire la sortie de debug sur la liaison série qui affiche tension et température :
+screen /dev/ttyACM0 115200
 
+# la troisieme démo lit une UART 
+cd ../continuous_uart
+make -j4
+# brancher la carte, monter le disque USB DIS_F407VG, puis flasher le binaire :
+# si dans une machine virtuelle : transferer la sonde de prog vers la machine virtuelle :
+# menu VM -> Removable Device ->STMicroelectronics STM32 STLink -> Connect 
+cp build/ch.bin /mnt/media/xxx/DIS_F407VG
+# brancher deux convertisseur USB-Serie, pour le premier, brancher son TX sur PB07 (connecteur P2:24)
+#                                       pour le deuxième brancher son RX sur PB10 (connecteur P1:34)
+# connecter les masses sur des broches GND, il y en a plusieurs
+# il est maintenant possible depuis linux d'écrire à 230400 bauds sur la première liaison série, et recuperer
+# le flux sur l'autre liaison série à 115200 bauds, sans utiliser le cpu, sans perte tant qu'on ne sature pas le
+# buffer de 1Ko
+
+
+
+# la quatrieme demo 
