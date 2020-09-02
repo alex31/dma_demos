@@ -56,7 +56,7 @@ make -j4
 cp build/ch.bin /mnt/media/xxx/DIS_F407VG
 # brancher deux convertisseur USB-Serie, pour le premier, brancher son TX sur PB07 (connecteur P2:24)
 #                                       pour le deuxième brancher son RX sur PB10 (connecteur P1:34)
-# connecter les masses sur des broches GND, il y en a plusieurs
+# connecter les masses des câbles USB-Série sur des broches GND (il y en a plusieurs)
 # il est maintenant possible depuis linux d'écrire à 230400 bauds sur la première liaison série, et recuperer
 # le flux sur l'autre liaison série à 115200 bauds, sans utiliser le cpu, sans perte tant qu'on ne sature pas le
 # buffer de 1Ko
@@ -64,3 +64,18 @@ cp build/ch.bin /mnt/media/xxx/DIS_F407VG
 
 
 # la quatrieme demo 
+cd ../ws2812_strip
+make -j4
+# brancher la carte, monter le disque USB DIS_F407VG, puis flasher le binaire :
+# si dans une machine virtuelle : transferer la sonde de prog vers la machine virtuelle :
+# menu VM -> Removable Device ->STMicroelectronics STM32 STLink -> Connect 
+cp build/ch.bin /mnt/media/xxx/DIS_F407VG
+# brancher de 1 à 4 bandes de LEDs WS2812B sur les broches PA08 (connecteur P2:43),
+# PA10 (connecteur P2:41), PE11 (connecteur P1:29), PE14 (connecteur P1:32)
+# brancher aussi les alimentation des ledstrip, si c'est des ledstrip jusqu'à 8 leds,
+# le 5V de la carte sera suffisant, si c'est des ledstrip plus grands, il faudra qu'ils
+# aient leur propre alimentation.
+# lancer un terminal pour lire la sortie de debug sur la liaison série qui affiche le temps passé dans l'ISR
+screen /dev/ttyACM0 115200
+# vous pouvez ajuster la taille du LEDSTRIP dans le fichier source,
+# en editant la valeur de la macro  STRIP_NB_LEDS
