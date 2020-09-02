@@ -165,7 +165,7 @@ static void blinker (void *arg)
   }
 }
 
-static const Color colorArraySource[NB_CHANNELS][STRIP_NB_LEDS] =
+static Color colorArraySource[NB_CHANNELS][8] =
   {{red, green, blue, yellow, white, cyan, purple, dimmed},
    {green, blue, yellow, green, blue, yellow, green, blue},
    {cyan, purple, cyan, purple, cyan, purple, cyan, purple},
@@ -246,8 +246,15 @@ int main(void) {
   // loop through animation in thread mode
   float angle=0.0f;
   while (true) {
-    // here one could use memory to memory DMA copy to save CPU cycles
-    memcpy(frameBuffer.colorArray, colorArraySource, sizeof(colorArraySource));
+    // a loop for the one who want to plug big ledstrip initialised from small
+    // buffer of color repeated to fill the ledstrip
+    char *ptr = (char *) frameBuffer.colorArray;
+    char * const endPtr =  (char *) frameBuffer.colorArray + sizeof(frameBuffer.colorArray);
+    while (ptr < endPtr) {
+      // here one could use memory to memory DMA copy to save CPU cycles
+      memcpy(ptr, colorArraySource, MIN((int) sizeof(colorArraySource), endPtr-ptr));
+      ptr += sizeof(colorArraySource);
+    }
     float sina = sinf(angle);
     sina *= sina; // always positive range from 0 to 1 
     // dimming the leds together following a sine curve
