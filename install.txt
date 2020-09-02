@@ -25,6 +25,11 @@ sudo usermod -a -G dialout $USER
 # l'Ecole Nationale de l'Aviation Civile
 git clone --recursive https://github.com/alex31/dma_demos.git
 
+# une fois l'image clonée (cas de la machine virtuelle par exemple) la mise à jour
+# locale des demos ss fera par :
+cd ~/dma_demos
+git pull ; git submodule update
+
 
 # La première démo fait, via DMA, un chenillard avec les 4 LEDs soudées sur la carte
 # discoveryf4. Une tâche fait périodiquement flasher les 4 leds d'un coup toute ls secondes.
