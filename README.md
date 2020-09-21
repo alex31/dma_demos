@@ -30,8 +30,7 @@ git clone --recursive https://github.com/alex31/dma_demos.git
 ### une fois l'image clonée
 > mise à jour locale des demos (impératif en cas d'utilisation de la machine virtuelle) se fera par :
 
-cd ~/dma_demos
-git pull ; git submodule update
+cd ~/dma_demos; git pull ; git submodule update
 
 
 ### La première démo : un chenillard avec les 4 LEDs soudées sur la carte discoveryF4. 
@@ -39,8 +38,7 @@ git pull ; git submodule update
 - Après un appui sur le bouton USER bleu, Chibios est stoppé
 - le flash périodique s'arrète, mais le DMA continue d'animer le chenillard sans intervention du CPU qui est arreté.
 
-cd dma_demos/led_blink
-make -j4
+cd dma_demos/led_blink; make -j4
 >brancher la carte, monter le disque USB DIS_F407VG, puis flasher le binaire :
 
 cp build/ch.bin /mnt/media/xxx/DIS_F407VG
@@ -50,8 +48,7 @@ cp build/ch.bin /mnt/media/xxx/DIS_F407VG
 - Le pgm commence par faire de l'acquisition one shot
 - après un appui sur le bouton USER bleu : fait de l'acquisition continue :
 
-cd ../adc
-make -j4
+cd ../adc; make -j4
 - brancher la carte, monter le disque USB DIS_F407VG
 - flasher le binaire : si dans une machine virtuelle : transferer la sonde de prog vers la machine virtuelle : menu VM -> Removable Device ->STMicroelectronics STM32 STLink -> Connect 
 
@@ -61,8 +58,7 @@ cp build/ch.bin /mnt/media/xxx/DIS_F407VG
 screen /dev/ttyACM0 115200
 
 ### la troisieme démo lit une UART 
-cd ../continuous_uart
-make -j4
+cd ../continuous_uart; make -j4
 - brancher la carte
 - monter le disque USB DIS_F407VG, puis flasher le binaire : si dans une machine virtuelle : transferer la sonde de prog vers la machine virtuelle : menu VM -> Removable Device ->STMicroelectronics STM32 STLink -> Connect 
 
@@ -74,8 +70,7 @@ cp build/ch.bin /mnt/media/xxx/DIS_F407VG
 
 
 ### la quatrieme demo pilote des LEDs WS2812
-cd ../ws2812_strip
-make -j4
+cd ../ws2812_strip; make -j4
 - brancher la carte, monter le disque USB DIS_F407VG, puis flasher le binaire 
 - si dans une machine virtuelle : transferer la sonde de prog vers la machine virtuelle :
 - menu VM -> Removable Device ->STMicroelectronics STM32 STLink -> Connect 
