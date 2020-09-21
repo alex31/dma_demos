@@ -153,12 +153,16 @@ static float vddaFromVref(const int vrefSample)
 static void adcContinuousCB(ADCDriver *adcp)
 {
   // depending on half buffer that has just been filled
-  adcsample_t *buffer = samples + (adcIsBufferComplete(adcp) ?
-				   ADC_GRP1_BUF_DEPTH / 2 : 0);
+  // if adcIsBufferComplete return true, the last filled
+  // half buffer start in the middle of buffer, else, is start at
+  // beginiing of buffer
+  const adcsample_t *buffer = samples + (adcIsBufferComplete(adcp) ?
+					 ADC_GRP1_BUF_DEPTH / 2 :
+					 0);
   uint32_t vddaAccumSamples = 0U;
   uint32_t coreTempAccumSamples = 0U;
 
-  isrCalledCount++;
+  isrCalledCount++; // just for statistics
   
   for (size_t i=0; i<ADC_GRP1_BUF_DEPTH/2; i++) {
     vddaAccumSamples += buffer[1+(i*ADC_GRP1_NUM_CHANNELS)];
