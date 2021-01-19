@@ -145,7 +145,7 @@ int main(void) {
     memset(dest, 42, sizeof(dest));
     const benchResults brMcpy = doBench(benchMemcpyWrapper, BENCH_REPEAT, (void *) sizeInByte);
     
-    DebugTrace("MEMCPY [%u bytes] total=%lu, mean=%lu, min=%lu, max=%lu tput = %.2f Mo/s",
+    DebugTrace("MEMCPY [%u bytes] total=%lu, mean=%lu, min=%lu, max=%lu tput = %.2f Mo/s\n\n",
 	       sizeInByte,
 	       brMcpy.totalMicroSeconds,
 	       brMcpy.meanMicroSeconds, 
