@@ -45,7 +45,7 @@ static const DMAConfig dmaConfigRead = {
        .msize = 1, // so we use same size for words in memory
        .inc_peripheral_addr = false, // always update ODR and no other registers
        .inc_memory_addr = true, // increment memory pointer
-       .circular = true, // continuous transaction
+       .op_mode = DMA_CONTINUOUS_HALF_BUFFER,
        .end_cb = &dmaReceiveCb
 };
 static const DMAConfig dmaConfigWrite = {
@@ -58,7 +58,7 @@ static const DMAConfig dmaConfigWrite = {
        .msize = 1, // so we use same size for words in memory
        .inc_peripheral_addr = false, // always update ODR and no other registers
        .inc_memory_addr = true, // increment memory pointer
-       .circular = false, // continuous transaction
+       .op_mode = DMA_ONESHOT,
        .end_cb = NULL
 };
 

@@ -41,7 +41,7 @@ static const DMAConfig dmaConfig = {
        .msize = 2, // so we use same size for words in memory
        .inc_peripheral_addr = false, // always update ODR and no other registers
        .inc_memory_addr = true, // increment memory pointer
-       .circular = true // continuous transaction
+       .op_mode = DMA_CONTINUOUS_HALF_BUFFER
 };
 
 // an heartbeat task which prove that the system is alive

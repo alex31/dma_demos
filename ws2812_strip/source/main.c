@@ -198,7 +198,7 @@ int main(void) {
        .msize = 2, // so we use same size for words in memory
        .inc_peripheral_addr = false, // always update ODR and no other registers
        .inc_memory_addr = true, // increment memory pointer
-       .circular = true, // continuous mode
+       .op_mode = DMA_CONTINUOUS_HALF_BUFFER,
        .end_cb = &dmaHalfCb, // call each time half buffer has been sent
        .user_data = &frameBuffer // context, to share ISR among timers
   };
