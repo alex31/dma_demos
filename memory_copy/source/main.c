@@ -11,13 +11,40 @@
  */
 
 /*
-** compile optimisée, 4096 octets ** 
-DMA total=2956, mean=30, min=30, max=30 => 132Mo/s
-MEMCPY total=3381, mean=34, min=33, max=33 => 115Mo/s
+  Resultats en compilation optimisée :
 
-** compile optimisée, 128 octets **
-DMA total=460, mean=5, min=5, max=5  => 26Mo/s
-MEMCPY total=129, mean=2, min=2, max=2 => 94Mo/s
+DMA [4096 bytes] total=2957, mean=30, min=30, max=30 tput = 132.10 Mo/s
+MEMCPY [4096 bytes] total=3378, mean=34, min=33, max=35 tput = 115.63 Mo/s
+
+DMA [2048 bytes] total=1662, mean=17, min=17, max=17 tput = 117.51 Mo/s
+MEMCPY [2048 bytes] total=1699, mean=17, min=17, max=17 tput = 114.95 Mo/s
+
+DMA [1024 bytes] total=1014, mean=11, min=11, max=11 tput = 96.30 Mo/s
+MEMCPY [1024 bytes] total=862, mean=9, min=9, max=9 tput = 113.29 Mo/s
+
+DMA [512 bytes] total=690, mean=7, min=7, max=7 tput = 70.76 Mo/s
+MEMCPY [512 bytes] total=442, mean=5, min=5, max=5 tput = 110.47 Mo/s
+
+DMA [256 bytes] total=529, mean=6, min=6, max=6 tput = 46.15 Mo/s
+MEMCPY [256 bytes] total=231, mean=3, min=3, max=3 tput = 105.68 Mo/s
+
+DMA [128 bytes] total=458, mean=5, min=5, max=5 tput = 26.65 Mo/s
+MEMCPY [128 bytes] total=103, mean=2, min=1, max=1 tput = 118.51 Mo/s
+
+DMA [64 bytes] total=449, mean=5, min=5, max=5 tput = 13.59 Mo/s
+MEMCPY [64 bytes] total=62, mean=1, min=1, max=1 tput = 98.44 Mo/s
+
+DMA [32 bytes] total=445, mean=5, min=5, max=5 tput = 6.85 Mo/s
+MEMCPY [32 bytes] total=44, mean=1, min=1, max=1 tput = 69.35 Mo/s
+
+DMA [16 bytes] total=439, mean=5, min=5, max=5 tput = 3.47 Mo/s
+MEMCPY [16 bytes] total=33, mean=1, min=1, max=1 tput = 46.23 Mo/s
+
+DMA [8 bytes] total=437, mean=5, min=5, max=5 tput = 1.74 Mo/s
+MEMCPY [8 bytes] total=29, mean=1, min=1, max=1 tput = 26.30 Mo/s
+
+DMA [4 bytes] total=437, mean=5, min=5, max=5 tput = 0.87 Mo/s
+MEMCPY [4 bytes] total=26, mean=1, min=1, max=1 tput = 14.67 Mo/s
 */
 
 
@@ -58,7 +85,7 @@ static void blinker (void *arg)
   }
 }
 
-
+#define BENCH_REPEAT 100
 #define MEMORY_LEN 1024U
 static const uint32_t source[MEMORY_LEN] = {[0 ... MEMORY_LEN-1] = 0xFF00};
 static uint32_t IN_DMA_SECTION(dest[MEMORY_LEN]);
@@ -95,31 +122,43 @@ int main(void) {
   consoleLaunch();  
 
 
+  palEnableLineEvent(LINE_BLUE_BUTTON, PAL_EVENT_MODE_FALLING_EDGE);
   // bench DMA transfert from memory to memory
-  while (palReadLine(LINE_BLUE_BUTTON) == PAL_HIGH) {
-    memset(dest, 42, sizeof(dest));
-    const benchResults brDma = doBench(benchDmacpyWrapper, 100, (void *) MEMORY_LEN);
+  size_t sizeInWord = MEMORY_LEN;
+  while (true) {
+    const size_t sizeInByte = sizeInWord * sizeof(uint32_t);
+    palWaitLineTimeout(LINE_BLUE_BUTTON, TIME_INFINITE);
+    memset(dest, 42, sizeInByte);
+    const benchResults brDma = doBench(benchDmacpyWrapper, BENCH_REPEAT, (void *) sizeInWord);
     
-    DebugTrace("DMA total=%lu, mean=%lu, min=%lu, max=%lu",
+    DebugTrace("DMA [%u bytes] total=%lu, mean=%lu, min=%lu, max=%lu tput = %.2f Mo/s",
+	       sizeInByte,
 	       brDma.totalMicroSeconds,
 	       brDma.meanMicroSeconds, 
 	       brDma.minMicroSeconds,  
-	       brDma.maxMicroSeconds); 
-    chDbgAssert(memcmp(source, dest, sizeof(source)) == 0, "Dma Copy failed");
+	       brDma.maxMicroSeconds,
+	       (sizeInByte * BENCH_REPEAT) * 1e6d /  (brDma.totalMicroSeconds * 1024 * 1024.0d)); 
+    chDbgAssert(memcmp(source, dest, sizeInByte) == 0, "Dma Copy failed");
     chDbgAssert(dest[0] == 0xFF00, "probable direction mismatch");
     
     // bench DMA transfert from memory to memory
     memset(dest, 42, sizeof(dest));
-    const benchResults brMcpy = doBench(benchMemcpyWrapper, 100, (void *) sizeof(source));
+    const benchResults brMcpy = doBench(benchMemcpyWrapper, BENCH_REPEAT, (void *) sizeInByte);
     
-    DebugTrace("MEMCPY total=%lu, mean=%lu, min=%lu, max=%lu",
+    DebugTrace("MEMCPY [%u bytes] total=%lu, mean=%lu, min=%lu, max=%lu tput = %.2f Mo/s",
+	       sizeInByte,
 	       brMcpy.totalMicroSeconds,
 	       brMcpy.meanMicroSeconds, 
 	       brMcpy.minMicroSeconds,  
-	       brMcpy.maxMicroSeconds); 
-    chDbgAssert(memcmp(source, dest, sizeof(source)) == 0, "Memcpy Copy failed");
+	       brMcpy.maxMicroSeconds,
+	       (sizeInByte * BENCH_REPEAT) * 1e6d /  (brMcpy.totalMicroSeconds * 1024 * 1024.0d)); 
+    chDbgAssert(memcmp(source, dest, sizeInByte) == 0, "Memcpy Copy failed");
     chDbgAssert(dest[0] == 0xFF00, "probable direction mismatch");
-    chThdSleepSeconds(2);
+
+    if (sizeInWord == 1)
+      sizeInWord = MEMORY_LEN;
+    else
+      sizeInWord /= 2;
   }
 
   chThdSleep(TIME_INFINITE);
