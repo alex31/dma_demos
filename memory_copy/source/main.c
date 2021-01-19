@@ -156,7 +156,7 @@ int main(void) {
     chDbgAssert(dest[0] == 0xFF00, "probable direction mismatch");
 
     if (sizeInWord == 1)
-      sizeInWord = MEMORY_LEN;
+      break;
     else
       sizeInWord /= 2;
   }
@@ -171,7 +171,18 @@ static void benchMemcpyWrapper(void *userData)
   memcpy(dest, source, (size_t) userData);
 }
 
+/*
+  set STM32_DMA_USE_MUTUAL_EXCLUSION to TRUE in halconf.h to make dmaTransfert reentrant
+  if not it's a little bit faster, but can be called only from one thread.
+ */
 static void benchDmacpyWrapper(void *userData)
 {
+#if STM32_DMA_USE_MUTUAL_EXCLUSION
+  dmaAcquireBus(&dmap);
+#endif
   dmaTransfertTimeout(&dmap, (void *) source, dest, (size_t) userData, TIME_INFINITE);
+#if STM32_DMA_USE_MUTUAL_EXCLUSION
+  dmaReleaseBus(&dmap);
+#endif
 }
+

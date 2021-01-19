@@ -42,7 +42,7 @@
 #endif
 
 #if !defined(STM32_DMA_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
-#define STM32_DMA_USE_MUTUAL_EXCLUSION    TRUE
+#define STM32_DMA_USE_MUTUAL_EXCLUSION    FALSE
 #endif
 
 #if !defined(STM32_DMA_USE_ASYNC_TIMOUT) || defined(__DOXYGEN__)
