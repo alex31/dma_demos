@@ -10,8 +10,8 @@ DEBUG := 1
 OPT_SPEED := 2
 OPT_SIZE := 3
 
-EXECMODE := $(DEBUG)
-#EXECMODE := $(OPT_SPEED)
+#EXECMODE := $(DEBUG)
+EXECMODE := $(OPT_SPEED)
 #EXECMODE := $(OPT_SIZE)
 
 
@@ -34,7 +34,9 @@ endif
 ifeq ($(EXECMODE),$(OPT_SPEED)) 
     USE_OPT =  -Ofast -flto  -Wall -Wextra \
 	    -falign-functions=16 -fomit-frame-pointer \
-	     $(GCC_DIAG)
+	    -DCH_DBG_SYSTEM_STATE_CHECK=0 -DCH_DBG_ENABLE_CHECKS=0 \
+	    -DCH_DBG_ENABLE_ASSERTS=0 -DCH_DBG_ENABLE_STACK_CHECK=0 -DCH_DBG_FILL_THREADS=0 \
+	    -DCH_DBG_THREADS_PROFILING=0 $(GCC_DIAG)
 endif
 
 ifeq ($(EXECMODE),$(OPT_SIZE)) 
@@ -168,7 +170,8 @@ CSRC = $(ALLCSRC) \
        $(VARIOUS)/printf.c \
        $(VARIOUS)/microrl/microrlShell.c \
        $(VARIOUS)/microrl/microrl.c \
-       $(VARIOUS)/hal_stm32_dma.c 
+       $(VARIOUS)/hal_stm32_dma.c \
+       $(VARIOUS)/benchTime.c
 
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
