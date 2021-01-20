@@ -172,8 +172,9 @@ static void benchMemcpyWrapper(void *userData)
 }
 
 /*
-  set STM32_DMA_USE_MUTUAL_EXCLUSION to TRUE in halconf.h to make dmaTransfert reentrant
-  if not it's a little bit faster, but can be called only from one thread.
+  set STM32_DMA_USE_MUTUAL_EXCLUSION to TRUE in halconf.h to make dmaTransfert reentrant.
+  If set to FALSE, it's a little bit faster, but nothing will prevent multiple threads to call the function 
+  concurrently and trigger a hardware fault.
  */
 static void benchDmacpyWrapper(void *userData)
 {
