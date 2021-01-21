@@ -16,14 +16,13 @@
 /*===========================================================================*/
 
 typedef void (cmd_func_t) (BaseSequentialStream *lchp, int argc,const char * const argv[]);
-static cmd_func_t cmd_mem, cmd_threads, cmd_uid, cmd_shutdown, cmd_bkp;
+static cmd_func_t cmd_mem, cmd_threads, cmd_uid, cmd_shutdown;
 
 static const ShellCommand commands[] = {
   {"mem", cmd_mem},
   {"threads", cmd_threads},
   {"uid", cmd_uid},
   {"shutdown", cmd_shutdown},
-  {"bkp", cmd_bkp},
   {NULL, NULL}
 };
 
@@ -83,16 +82,6 @@ static void cmd_uid(BaseSequentialStream *lchp, int argc,const char * const argv
   chprintf (lchp, "\r\n");
 }
 
-static void cmd_bkp(BaseSequentialStream *lchp, int argc,const char * const argv[]) {
-  static int IN_BCKP_SECTION_NOINIT(backuped);
-  (void)argv;
-  if (argc > 0) {
-    backuped = atoi(argv[0]);
-    chprintf (lchp, "WRITE backuped = %d\r\n", backuped);
-  } else {
-    chprintf (lchp, "READ backuped = %d\r\n", backuped);
-  }
-}
 
 static void cmd_shutdown(BaseSequentialStream *lchp, int argc,const char * const argv[]) {
   (void)lchp;
