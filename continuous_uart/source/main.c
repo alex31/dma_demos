@@ -157,7 +157,6 @@ static void dmaReceiveCb(DMADriver *dmap, void *buffer, const size_t n)
 {
   (void) dmap;
 
-  SD1.usart->DR &= ~USART_CR3_DMAR;
   chSysLockFromISR();
 
   for (size_t i=0; i<n; i++)
