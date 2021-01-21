@@ -9,6 +9,9 @@
   designed to run on a STM32F407G-DISC1 board
  */
 
+/*
+  reception of data on USART1_RX, transmission on UART2T_X
+ */
 #define STM32_UART_USART1_RX_DMA_STREAM       STM32_DMA_STREAM_ID(2, 5)
 #define STM32_UART_USART1_RX_DMA_CHANNEL      4
 #define STM32_UART_USART3_TX_DMA_STREAM	      STM32_DMA_STREAM_ID(1, 3)
@@ -26,7 +29,7 @@ static const SerialConfig uartReadConfig =  {
 				       .cr3 = USART_CR3_DMAR
 };
 static const SerialConfig uartWriteConfig =  {
-				       .speed = 230400,
+				       .speed = 9600,
 				       .cr1 = 0,
 				       .cr2 = USART_CR2_STOP1_BITS,
 				       // generate signal when USART
@@ -87,20 +90,25 @@ static void blinker (void *arg)
 // theses objects will manage a stream of a dma controller
 DMADriver dmapRead, dmapWrite;
 
-#define DMA_TRANSACTION_SIZE	16UL
-#define DMA_FIFO_SIZE 16UL
+/*
+  32 bytes transfert bloc : 2 DMA interrupts (one at receive stage, one at transmit stage)
+  each 32 bytes instead of 2 interrupt by byte without dma mode
+ */
+#define DMA_TRANSACTION_SIZE	32UL
+#define DMA_FIFO_SIZE 16UL  // queue of the fifo (512 bytes)
 
 
+/*
+  declaration of object fifo queue
+ */
 typedef struct  {
-  uint16_t dmabuf[DMA_TRANSACTION_SIZE];
+  uint8_t dmabuf[DMA_TRANSACTION_SIZE];
 } fifo_dmaBuf_t;
 
 fifo_dmaBuf_t IN_DMA_SECTION_NOINIT(dmaobj_pool[DMA_FIFO_SIZE]);
 msg_t msg_fifo[DMA_FIFO_SIZE];
 objects_fifo_t fifo;
 
-//static uint8_t readWriteBuffer[HALF_DMA_BUFFER_SIZE * QUEUE_LEN];
-//static input_queue_t readWriteQueue;
 
 int main(void) {
 
@@ -123,9 +131,13 @@ int main(void) {
   // start the heartbeat task
   chThdCreateStatic(waBlinker, sizeof(waBlinker), NORMALPRIO, &blinker, NULL);
 
+  // start receive and sending USART
   sdStart(&SD1, &uartReadConfig);
   sdStart(&SD3, &uartWriteConfig);
 
+  /* disable interrupt which was set by sdStart for byte by byte send/receive
+     and which are no more necessary in DMA mode
+   */
   SD1.usart->CR1 &= ~(USART_CR1_PEIE | USART_CR1_RXNEIE | USART_CR1_TXEIE |
 		      USART_CR1_TCIE);
   SD3.usart->CR1 &= ~(USART_CR1_PEIE | USART_CR1_RXNEIE | USART_CR1_TXEIE |
@@ -139,7 +151,11 @@ int main(void) {
   dmaStart(&dmapRead, &dmaConfigRead);
   dmaStart(&dmapWrite, &dmaConfigWrite);
 
-  // launch continous DMA transfert from USART to memory pool fifo
+  /* launch continous DMA transfert from USART to memory pool fifo
+     In double buffer mode, the memory location is no given to dmaStartTransfert
+     but dynamically given to DMA at his demand via the next_cb callback 
+     We enforce that by giving NULL for the memory address
+  */
   dmaStartTransfert(&dmapRead, &SD1.usart->DR, NULL, DMA_TRANSACTION_SIZE);
 
   // start the interractive shell
@@ -160,14 +176,27 @@ static void dmaReceiveCb(DMADriver *dmap, void *buffer, const size_t n)
 {
   (void) dmap;
   chDbgAssert(n == DMA_TRANSACTION_SIZE, "internal dma buffer error");
-  SD1.usart->DR &= ~USART_CR3_DMAR;
-  chSysLockFromISR();
 
+  chSysLockFromISR();
   chFifoSendObjectI(&fifo, buffer);
-  
   chSysUnlockFromISR();
 }
 
+/*
+  this callback can be called from 2 kind of locked states :
+  1/ at start of the transfert, it is called 2 times from a regular locked state to 
+     initially populate MEM0p and MEM1p
+   then 
+  2/ from ISR context each time a buffer is completed. 
+
+  Since we cannot know the context, we do not use chSysLock or chSysLockFromISR
+  but chSysGetStatusAndLockX which can be called from any locked context
+
+  in the case we send at a lower baudrate then we receive, one will eventually run out of buffer and 
+  chFifoTakeObjectI will return NULL. dma library handle this and some of the received data 
+  will be lost, a counter of overwrite situation will be incremented. It can  
+  be handled at the application level to log an error.  
+ */
 static void* dmaAskNextBufferCb(DMADriver *dmap, const size_t n)
 {
   (void) dmap;
