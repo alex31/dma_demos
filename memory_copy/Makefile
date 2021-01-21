@@ -49,7 +49,7 @@ ifeq ($(EXECMODE),$(OPT_SIZE))
 	     $(GCC_DIAG)
 endif
 
- USE_OPT += -DDEVBOARDM4=1
+USE_OPT += -DDEVBOARDM4=1
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
