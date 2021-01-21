@@ -52,6 +52,9 @@
 #define   STM32_DMA_REQUIRED        TRUE
 #undef STM32_DMA_DRIVER_EXT_INIT_HOOK
 
+#if !defined(STM32_DMA_USE_DOUBLE_BUFFER) || defined(__DOXYGEN__)
+#define STM32_DMA_USE_DOUBLE_BUFFER               TRUE
+#endif
 /**
  * @brief   Enables the PAL subsystem.
  */

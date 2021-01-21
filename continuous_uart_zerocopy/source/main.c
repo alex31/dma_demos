@@ -9,12 +9,13 @@
   designed to run on a STM32F407G-DISC1 board
  */
 
-#define STM32_UART_USART2_RX_DMA_STREAM  STM32_DMA_STREAM_ID(1, 5)
-#define STM32_UART_USART2_RX_DMA_CHANNEL 4U
-#define STM32_UART_USART3_TX_DMA_STREAM  STM32_DMA_STREAM_ID(1, 3)
-#define STM32_UART_USART3_TX_DMA_CHANNEL 4U
+#define STM32_UART_USART1_RX_DMA_STREAM       STM32_DMA_STREAM_ID(2, 5)
+#define STM32_UART_USART1_RX_DMA_CHANNEL      4
+#define STM32_UART_USART3_TX_DMA_STREAM	      STM32_DMA_STREAM_ID(1, 3)
+#define STM32_UART_USART3_TX_DMA_CHANNEL      4U
 
-static void dmaReceiveCb(DMADriver *dmapRead, void *buffer, const size_t n);
+static void  dmaReceiveCb(DMADriver *dmapRead, void *buffer, const size_t n);
+static void* dmaAskNextBufferCb(DMADriver *dmap, const size_t n);
 
 static const SerialConfig uartReadConfig =  {
 				       .speed = 115200,
@@ -36,8 +37,8 @@ static const SerialConfig uartWriteConfig =  {
 
 // dma configuration
 static const DMAConfig dmaConfigRead = {
-       .stream = STM32_UART_USART2_RX_DMA_STREAM,
-       .channel = STM32_UART_USART2_RX_DMA_CHANNEL,
+       .stream = STM32_UART_USART1_RX_DMA_STREAM,
+       .channel = STM32_UART_USART1_RX_DMA_CHANNEL,
        .dma_priority =  0, // low priority
        .irq_priority = 12, // low priority 
        .direction = DMA_DIR_P2M, // memory to peripheral
@@ -45,8 +46,9 @@ static const DMAConfig dmaConfigRead = {
        .msize = 1, // so we use same size for words in memory
        .inc_peripheral_addr = false, // always update ODR and no other registers
        .inc_memory_addr = true, // increment memory pointer
-       .op_mode = DMA_CONTINUOUS_HALF_BUFFER,
-       .end_cb = &dmaReceiveCb
+       .op_mode = DMA_CONTINUOUS_DOUBLE_BUFFER,
+       .end_cb = &dmaReceiveCb,
+       .next_cb = &dmaAskNextBufferCb,
 };
 static const DMAConfig dmaConfigWrite = {
        .stream = STM32_UART_USART3_TX_DMA_STREAM,
@@ -79,16 +81,26 @@ static void blinker (void *arg)
   }
 }
 
-#define DMA_BUFFER_SIZE	64U
-#define HALF_DMA_BUFFER_SIZE (DMA_BUFFER_SIZE / 2U)
-#define QUEUE_LEN	32U
-static  uint8_t usartBuf[DMA_BUFFER_SIZE] __attribute__((aligned(4)));
+
+
 
 // theses objects will manage a stream of a dma controller
 DMADriver dmapRead, dmapWrite;
 
-static uint8_t readWriteBuffer[HALF_DMA_BUFFER_SIZE * QUEUE_LEN];
-static input_queue_t readWriteQueue;
+#define DMA_TRANSACTION_SIZE	8UL
+#define DMA_FIFO_SIZE 16UL
+
+
+typedef struct  {
+  uint16_t dmabuf[DMA_TRANSACTION_SIZE];
+} fifo_dmaBuf_t;
+
+fifo_dmaBuf_t IN_DMA_SECTION_NOINIT(dmaobj_pool[DMA_FIFO_SIZE]);
+msg_t msg_fifo[DMA_FIFO_SIZE];
+objects_fifo_t fifo;
+
+//static uint8_t readWriteBuffer[HALF_DMA_BUFFER_SIZE * QUEUE_LEN];
+//static input_queue_t readWriteQueue;
 
 int main(void) {
 
@@ -102,11 +114,9 @@ int main(void) {
   halInit();
   chSysInit();
 
-  
-  iqObjectInit(&readWriteQueue, readWriteBuffer,
-	       sizeof usartBuf ,
-	       NULL, NULL);
-  
+  // initialise fifo object that is needed by dma
+  chFifoObjectInit(&fifo, sizeof(fifo_dmaBuf_t),  DMA_FIFO_SIZE,  dmaobj_pool, msg_fifo);
+
   // start the UART associated to the interractive shell
   consoleInit();
 
@@ -129,34 +139,42 @@ int main(void) {
   dmaStart(&dmapRead, &dmaConfigRead);
   dmaStart(&dmapWrite, &dmaConfigWrite);
 
-  // launch continous DMA transfert from memory to GPIO peripheral
-  dmaStartTransfert(&dmapRead, &SD1.usart->DR, usartBuf, DMA_BUFFER_SIZE);
+  // launch continous DMA transfert from USART to memory pool fifo
+  dmaStartTransfert(&dmapRead, &SD1.usart->DR, NULL, DMA_TRANSACTION_SIZE);
 
   // start the interractive shell
   consoleLaunch();
 
-  // read the input queue and send stream at different baud rate in thread
+  // read the fifo object queue and send stream at different baud rate in thread
   // context
-  uint8_t rb[HALF_DMA_BUFFER_SIZE];
+  fifo_dmaBuf_t *dmaBuf;
   while (true) {
     palToggleLine(LINE_LED1);
-    const msg_t n = iqReadTimeout(&readWriteQueue, rb, sizeof(rb),
-				  TIME_INFINITE);
-    chDbgAssert(n != 0, "ibqReadTimeout");
-    dmaTransfert(&dmapWrite, &SD3.usart->DR, rb, sizeof(rb));
+    chFifoReceiveObjectTimeout(&fifo, (void **) &dmaBuf,  TIME_INFINITE);
+    dmaTransfert(&dmapWrite, &SD3.usart->DR, dmaBuf->dmabuf, sizeof(dmaBuf->dmabuf));
+    chFifoReturnObject(&fifo, dmaBuf);
   }
 }
 
 static void dmaReceiveCb(DMADriver *dmap, void *buffer, const size_t n)
 {
   (void) dmap;
-
+  chDbgAssert(n == DMA_TRANSACTION_SIZE, "internal dma buffer error");
   SD1.usart->DR &= ~USART_CR3_DMAR;
   chSysLockFromISR();
 
-  for (size_t i=0; i<n; i++)
-    iqPutI(&readWriteQueue, ((uint8_t *)buffer)[i]);
+  chFifoSendObjectI(&fifo, buffer);
   
   chSysUnlockFromISR();
 }
 
+static void* dmaAskNextBufferCb(DMADriver *dmap, const size_t n)
+{
+  (void) dmap;
+  chDbgAssert(n == DMA_TRANSACTION_SIZE, "internal dma buffer error");
+  syssts_t sts = chSysGetStatusAndLockX();
+  void *obj  = chFifoTakeObjectI(&fifo);
+  chSysRestoreStatusX(sts);
+
+  return obj;
+}

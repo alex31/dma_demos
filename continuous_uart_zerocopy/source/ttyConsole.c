@@ -65,17 +65,6 @@ static void cmd_uid(BaseSequentialStream *lchp, int argc,const char * const argv
     return;
   }
 
-
-  /* for (uint32_t i=0; i<2000; i++) { */
-  /*   bkpram[i] = (uint16_t) i; */
-  /* } */
-  
-  /* for (uint32_t i=0; i<2000; i++) { */
-  /*   if (bkpram[i] != (uint16_t) i) { */
-  /*     DebugTrace ("bkpram error"); */
-  /*   } */
-  /* } */
-
   chprintf (lchp, "uniq id : ");
   for (uint32_t i=0; i< UniqProcessorIdLen; i++)
     chprintf (lchp, "[%x] ", UniqProcessorId[i]);
