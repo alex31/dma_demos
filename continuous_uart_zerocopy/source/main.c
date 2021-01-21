@@ -87,7 +87,7 @@ static void blinker (void *arg)
 // theses objects will manage a stream of a dma controller
 DMADriver dmapRead, dmapWrite;
 
-#define DMA_TRANSACTION_SIZE	8UL
+#define DMA_TRANSACTION_SIZE	16UL
 #define DMA_FIFO_SIZE 16UL
 
 

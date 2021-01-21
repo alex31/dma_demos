@@ -9,10 +9,10 @@
   designed to run on a STM32F407G-DISC1 board
  */
 
-#define STM32_UART_USART2_RX_DMA_STREAM  STM32_DMA_STREAM_ID(1, 5)
-#define STM32_UART_USART2_RX_DMA_CHANNEL 4U
-#define STM32_UART_USART3_TX_DMA_STREAM  STM32_DMA_STREAM_ID(1, 3)
-#define STM32_UART_USART3_TX_DMA_CHANNEL 4U
+#define STM32_UART_USART1_RX_DMA_STREAM       STM32_DMA_STREAM_ID(2, 5)
+#define STM32_UART_USART1_RX_DMA_CHANNEL      4
+#define STM32_UART_USART3_TX_DMA_STREAM	      STM32_DMA_STREAM_ID(1, 3)
+#define STM32_UART_USART3_TX_DMA_CHANNEL      4U
 
 static void dmaReceiveCb(DMADriver *dmapRead, void *buffer, const size_t n);
 
@@ -36,8 +36,8 @@ static const SerialConfig uartWriteConfig =  {
 
 // dma configuration
 static const DMAConfig dmaConfigRead = {
-       .stream = STM32_UART_USART2_RX_DMA_STREAM,
-       .channel = STM32_UART_USART2_RX_DMA_CHANNEL,
+       .stream = STM32_UART_USART1_RX_DMA_STREAM,
+       .channel = STM32_UART_USART1_RX_DMA_CHANNEL,
        .dma_priority =  0, // low priority
        .irq_priority = 12, // low priority 
        .direction = DMA_DIR_P2M, // memory to peripheral
