@@ -14,6 +14,25 @@ EXECMODE := $(DEBUG)
 #EXECMODE := $(OPT_SPEED)
 #EXECMODE := $(OPT_SIZE)
 
+DEVBM_HSE_MHZ := 16
+DISCO_HSE_MHZ := 8
+
+ifeq    ($(BUILD), DB)
+        HSE_MHZ := $(DEVBM_HSE_MHZ)
+else
+	HSE_MHZ := $(DISCO_HSE_MHZ)
+endif
+
+DEVBM_HSE_MHZ := 16
+DISCO_HSE_MHZ := 8
+
+
+ifeq    ($(BUILD), DB)
+        HSE_MHZ := $(DEVBM_HSE_MHZ)
+else
+	HSE_MHZ := $(DISCO_HSE_MHZ)
+endif
+
 
 GCCVERSIONGTEQ7 := $(shell expr `arm-none-eabi-gcc -dumpversion | cut -f1 -d.` \>= 7)
 GCC_DIAG =  -Werror -Wno-error=unused-variable -Wno-error=format \
@@ -47,7 +66,7 @@ ifeq ($(EXECMODE),$(OPT_SIZE))
 	     $(GCC_DIAG)
 endif
 
-USE_OPT += -DDEVBOARDM4=1
+USE_OPT += -DHSE_MHZ=$(HSE_MHZ)
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
