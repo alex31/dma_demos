@@ -125,7 +125,7 @@ endif
 
 # Define project name here
 PROJECT = ch
-BOARD = DEVBM4
+
 
 # Target settings.
 MCU  = cortex-m4

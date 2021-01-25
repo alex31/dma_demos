@@ -17,7 +17,7 @@ EXECMODE := $(DEBUG)
 DEVBM_HSE_MHZ := 16
 DISCO_HSE_MHZ := 8
 
-ifeq    ($(BUILD), DB)
+ifeq    ($(TARGET), DB)
         HSE_MHZ := $(DEVBM_HSE_MHZ)
 else
 	HSE_MHZ := $(DISCO_HSE_MHZ)
@@ -25,13 +25,6 @@ endif
 
 DEVBM_HSE_MHZ := 16
 DISCO_HSE_MHZ := 8
-
-
-ifeq    ($(BUILD), DB)
-        HSE_MHZ := $(DEVBM_HSE_MHZ)
-else
-	HSE_MHZ := $(DISCO_HSE_MHZ)
-endif
 
 
 GCCVERSIONGTEQ7 := $(shell expr `arm-none-eabi-gcc -dumpversion | cut -f1 -d.` \>= 7)
@@ -145,7 +138,7 @@ endif
 
 # Define project name here
 PROJECT = ch
-BOARD = DEVBM4
+
 
 # Target settings.
 MCU  = cortex-m4

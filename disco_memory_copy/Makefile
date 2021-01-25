@@ -18,7 +18,7 @@ DEVBM_HSE_MHZ := 16
 DISCO_HSE_MHZ := 8
 
 
-ifeq    ($(BUILD), DB)
+ifeq    ($(TARGET), DB)
         HSE_MHZ := $(DEVBM_HSE_MHZ)
 else
 	HSE_MHZ := $(DISCO_HSE_MHZ)
@@ -138,7 +138,7 @@ endif
 
 # Define project name here
 PROJECT = ch
-BOARD = DEVBM4
+
 
 # Target settings.
 MCU  = cortex-m4
