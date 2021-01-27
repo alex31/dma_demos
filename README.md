@@ -1,5 +1,14 @@
 # Démonstrations pour l'article de Hackable sur le DMA
 
+### Une machine virtuelle pour vmware vmplayer est disponible :
+l'adresse tynyurl donnée dans l'article du Hackable N°36 est fausse, et je m'en excuse.
+Le lien direct pour télécharger l'image d'une machine virtuelle vmplayer avec kubuntu 20.04 et les outils pré-installés :
+
+https://drive.google.com/file/d/1tjipGJ9_paJ0SmH0m0Fd9BMzLjV12olb/view?usp=sharing
+
+Vmware vmplayer est une application gratuite dans le cadre d'une utilisation personnelle.
+Je vous invite à la télécharger sur le site de l'éditeur.
+
 ### Installation préalable des outils de developpement sur une machine ubuntu
 
 
