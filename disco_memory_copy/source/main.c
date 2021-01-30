@@ -60,11 +60,10 @@ static void benchDmacpyWrapper(void *userData);
 // dma configuration
 static const DMAConfig dmaConfig = {
        .stream = STM32_M2M_DMA_STREAM,
-       .channel = STM32_M2M_DMA_CHANNEL,
        .dma_priority =  0, // low prio (from low:0 to high:3)
        .irq_priority = 12, // low prio (from low:15 to high:2 [0,1 reserved])
-       .direction = DMA_DIR_M2M, // memory to peripheral
-       .msize = 4, // faster mode
+       .direction = DMA_DIR_M2M, // memory to memory
+       .msize = 4, // fastest 
        .psize = 4, // obviously same as msize in memory 2 memory mode
        .inc_peripheral_addr = true, // always update ODR and no other registers
        .inc_memory_addr = true, // increment memory pointer
@@ -123,11 +122,11 @@ int main(void) {
 
 
   palEnableLineEvent(LINE_BLUE_BUTTON, PAL_EVENT_MODE_FALLING_EDGE);
+  palWaitLineTimeout(LINE_BLUE_BUTTON, TIME_INFINITE);
   // bench DMA transfert from memory to memory
   size_t sizeInWord = MEMORY_LEN;
   while (true) {
     const size_t sizeInByte = sizeInWord * sizeof(uint32_t);
-    palWaitLineTimeout(LINE_BLUE_BUTTON, TIME_INFINITE);
     memset(dest, 42, sizeInByte);
     const benchResults brDma = doBench(benchDmacpyWrapper, BENCH_REPEAT, (void *) sizeInWord);
     
@@ -181,7 +180,7 @@ static void benchDmacpyWrapper(void *userData)
 #if STM32_DMA_USE_MUTUAL_EXCLUSION
   dmaAcquireBus(&dmap);
 #endif
-  dmaTransfertTimeout(&dmap, (void *) source, dest, (size_t) userData, TIME_INFINITE);
+  dmaTransfert(&dmap, (void *) source, dest, (size_t) userData);
 #if STM32_DMA_USE_MUTUAL_EXCLUSION
   dmaReleaseBus(&dmap);
 #endif
