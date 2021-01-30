@@ -13,6 +13,10 @@
 /*
   Resultats en compilation optimisée :
 
+
+  **********
+  système non chargé
+  **********
 DMA [4096 bytes] total=2957, mean=30, min=30, max=30 tput = 132.10 Mo/s
 MEMCPY [4096 bytes] total=3378, mean=34, min=33, max=35 tput = 115.63 Mo/s
 
@@ -45,6 +49,54 @@ MEMCPY [8 bytes] total=29, mean=1, min=1, max=1 tput = 26.30 Mo/s
 
 DMA [4 bytes] total=437, mean=5, min=5, max=5 tput = 0.87 Mo/s
 MEMCPY [4 bytes] total=26, mean=1, min=1, max=1 tput = 14.67 Mo/s
+ 
+  **********
+  système très chargé
+  **********
+
+DMA [4096 bytes] total=10241, mean=103, min=30, max=121 tput = 38.14 Mo/s
+MEMCPY [4096 bytes] total=245302, mean=2454, min=2401, max=2600 tput = 1.59 Mo/s
+
+
+DMA [2048 bytes] total=10378, mean=104, min=104, max=104 tput = 18.81 Mo/s
+MEMCPY [2048 bytes] total=123398, mean=1234, min=1201, max=1300 tput = 1.58 Mo/s
+
+
+DMA [1024 bytes] total=10378, mean=104, min=104, max=104 tput = 9.40 Mo/s
+MEMCPY [1024 bytes] total=62398, mean=624, min=601, max=699 tput = 1.56 Mo/s
+
+
+DMA [512 bytes] total=10378, mean=104, min=104, max=104 tput = 4.70 Mo/s
+MEMCPY [512 bytes] total=31799, mean=318, min=301, max=399 tput = 1.53 Mo/s
+
+
+DMA [256 bytes] total=11476, mean=115, min=104, max=203 tput = 2.12 Mo/s
+MEMCPY [256 bytes] total=16798, mean=168, min=101, max=400 tput = 1.45 Mo/s
+
+
+DMA [128 bytes] total=504, mean=6, min=6, max=6 tput = 24.22 Mo/s
+MEMCPY [128 bytes] total=8998, mean=90, min=2, max=100 tput = 1.35 Mo/s
+
+
+DMA [64 bytes] total=493, mean=5, min=5, max=5 tput = 12.38 Mo/s
+MEMCPY [64 bytes] total=5387, mean=54, min=1, max=100 tput = 1.13 Mo/s
+
+
+DMA [32 bytes] total=588, mean=6, min=5, max=104 tput = 5.19 Mo/s
+MEMCPY [32 bytes] total=2898, mean=29, min=1, max=100 tput = 1.05 Mo/s
+
+
+DMA [16 bytes] total=879, mean=9, min=5, max=104 tput = 1.73 Mo/s
+MEMCPY [16 bytes] total=1798, mean=18, min=1, max=99 tput = 0.84 Mo/s
+
+
+DMA [8 bytes] total=781, mean=8, min=5, max=104 tput = 0.97 Mo/s
+MEMCPY [8 bytes] total=1301, mean=14, min=1, max=99 tput = 0.58 Mo/s
+
+
+DMA [4 bytes] total=876, mean=9, min=5, max=104 tput = 0.43 Mo/s
+MEMCPY [4 bytes] total=1298, mean=13, min=1, max=99 tput = 0.29 Mo/s
+
 */
 
 
@@ -54,14 +106,35 @@ MEMCPY [4 bytes] total=26, mean=1, min=1, max=1 tput = 14.67 Mo/s
 
 
 
+static void startBench(void);
 static void benchMemcpyWrapper(void *userData);
 static void benchDmacpyWrapper(void *userData);
+static void simulateCpuLoad(GPTDriver *gptd);
+
+// heavy load simulation timer configuration
+static const GPTConfig gptcfg = {
+       // timer counter will increment @ 10khz
+       // with this value, ChibiOS HAL will calculate a 16 bit predivider
+       // from the source clock (168Mhz), so in this case
+       // predivider will be set to 16800
+       .frequency    = 100000,
+       
+       // callback, if set is called when counter
+       // reach auto reload value (ARR) and then update (count again from 0)
+       .callback     = &simulateCpuLoad,
+       
+       // dier : Dma Interrupt Enable Register is the link between timer and DMA
+       // the bit UDE : Update Dma request Enable ask timer to emit
+       // update signal when counter reach auto reload value.
+      .dier =  STM32_TIM_DIER_UDE 
+};
+
 
 // dma configuration
 static const DMAConfig dmaConfig = {
        .stream = STM32_M2M_DMA_STREAM,
-       .dma_priority =  0, // low prio (from low:0 to high:3)
-       .irq_priority = 12, // low prio (from low:15 to high:2 [0,1 reserved])
+       .dma_priority =  3, // high prio (from low:0 to high:3)
+       .irq_priority = 2, // high prio (from low:15 to high:2 [0,1 reserved])
        .direction = DMA_DIR_M2M, // memory to memory
        .msize = 4, // fastest 
        .psize = 4, // obviously same as msize in memory 2 memory mode
@@ -122,9 +195,29 @@ int main(void) {
 
 
   palEnableLineEvent(LINE_BLUE_BUTTON, PAL_EVENT_MODE_FALLING_EDGE);
+
+  // first bench without any cpu load
   palWaitLineTimeout(LINE_BLUE_BUTTON, TIME_INFINITE);
-  // bench DMA transfert from memory to memory
+  startBench();
+
+  // then bench with heavy load done under interruption
+  palWaitLineTimeout(LINE_BLUE_BUTTON, TIME_INFINITE);
+  gptStart(&GPTD1, &gptcfg);
+  gptStartContinuous(&GPTD1, 10); // ISR triggred @ 10khz
+  startBench();
+  gptStopTimer(&GPTD1);
+
+  
+  chThdSleep(TIME_INFINITE);
+}
+
+
+
+static void startBench(void)
+{
+ // bench DMA transfert from memory to memory
   size_t sizeInWord = MEMORY_LEN;
+
   while (true) {
     const size_t sizeInByte = sizeInWord * sizeof(uint32_t);
     memset(dest, 42, sizeInByte);
@@ -159,11 +252,7 @@ int main(void) {
     else
       sizeInWord /= 2;
   }
-
-  chThdSleep(TIME_INFINITE);
 }
-
-
 
 static void benchMemcpyWrapper(void *userData)
 {
@@ -186,3 +275,14 @@ static void benchDmacpyWrapper(void *userData)
 #endif
 }
 
+static volatile float result = 1.0f;
+static void simulateCpuLoad(GPTDriver *gptd)
+{
+  (void) gptd;
+
+  float l = result;
+  for (int i=0; i<400; i++) {
+    l *= 1.1f;
+  }
+  result = l;
+}
