@@ -113,20 +113,15 @@ static void simulateCpuLoad(GPTDriver *gptd);
 
 // heavy load simulation timer configuration
 static const GPTConfig gptcfg = {
-       // timer counter will increment @ 10khz
+       // timer counter will increment @ 100khz
        // with this value, ChibiOS HAL will calculate a 16 bit predivider
        // from the source clock (168Mhz), so in this case
-       // predivider will be set to 16800
+       // predivider will be set to 1680
        .frequency    = 100000,
        
        // callback, if set is called when counter
        // reach auto reload value (ARR) and then update (count again from 0)
        .callback     = &simulateCpuLoad,
-       
-       // dier : Dma Interrupt Enable Register is the link between timer and DMA
-       // the bit UDE : Update Dma request Enable ask timer to emit
-       // update signal when counter reach auto reload value.
-      .dier =  STM32_TIM_DIER_UDE 
 };
 
 
@@ -196,19 +191,21 @@ int main(void) {
 
   palEnableLineEvent(LINE_BLUE_BUTTON, PAL_EVENT_MODE_FALLING_EDGE);
 
-  // first bench without any cpu load
-  palWaitLineTimeout(LINE_BLUE_BUTTON, TIME_INFINITE);
-  startBench();
 
-  // then bench with heavy load done under interruption
-  palWaitLineTimeout(LINE_BLUE_BUTTON, TIME_INFINITE);
   gptStart(&GPTD1, &gptcfg);
-  gptStartContinuous(&GPTD1, 10); // ISR triggred @ 10khz
-  startBench();
-  gptStopTimer(&GPTD1);
 
+
+  while (true) {
+  // first bench without any cpu load
+    palWaitLineTimeout(LINE_BLUE_BUTTON, TIME_INFINITE);
+    startBench();
   
-  chThdSleep(TIME_INFINITE);
+    // then bench with heavy load done under interruption
+    palWaitLineTimeout(LINE_BLUE_BUTTON, TIME_INFINITE);
+    gptStartContinuous(&GPTD1, 10); // ISR triggred @ 10khz : start heavy load
+    startBench();
+    gptStopTimer(&GPTD1); // stop heavy load
+  }
 }
 
 
