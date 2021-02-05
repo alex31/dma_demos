@@ -180,7 +180,6 @@ CSRC = $(ALLCSRC) \
        $(VARIOUS)/printf.c \
        $(VARIOUS)/microrl/microrlShell.c \
        $(VARIOUS)/microrl/microrl.c \
-       $(VARIOUS)/adcHelper.c \
        $(VARIOUS)/hal_stm32_dma.c 
 
 
