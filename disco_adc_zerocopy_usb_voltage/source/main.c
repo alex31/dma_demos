@@ -69,12 +69,7 @@ static void spikeDetector (void *arg);
 // theses objects will manage a stream of a dma controller
 DMADriver dmapAdc1;
 
-/*
-  32 bytes transfert bloc : 2 DMA interrupts (one at receive stage, one at transmit stage)
-  each 32 bytes instead of 2 interrupt by byte without dma mode
- */
-#define DMA_FIFO_SIZE 16UL  // queue of the fifo (512 bytes)
-
+#define DMA_FIFO_SIZE 8UL  // queue of the fifo (512 bytes)
 /*
   declaration of object fifo queue
  */
@@ -111,19 +106,21 @@ int main(void)
 
   // start the heartbeat task
   chThdCreateStatic(waBlinker, sizeof(waBlinker), NORMALPRIO, &blinker, NULL);
+  // start the spikeDetectorTask with low priority : spike detection is kind
+  // of idle task, real application will have all the CPU when needed
   chThdCreateStatic(waSpikeDetector, sizeof(waSpikeDetector), LOWPRIO, &spikeDetector, NULL);
 
-  // helper function that fill ADCConversionGroup : one shot mode
-
-  initAdc1();
+  initAdc1(); // configure ADC1 : start sampling and enable signal for DMA
   dmaObjectInit(&dmapAdc1);
   dmaStart(&dmapAdc1, &dmaConfigAdc1);
+  // ADC1->DR is the register where sample result is stored
   dmaStartTransfert(&dmapAdc1, &ADC1->DR, NULL, DMA_TRANSACTION_SIZE);
   
  
   // start the interractive shell
   consoleLaunch();  
 
+  // do nothing here
   chThdSleep(TIME_INFINITE);
 }
 
