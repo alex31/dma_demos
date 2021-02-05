@@ -12,6 +12,23 @@
 #define ADC_GRP1_NUM_CHANNELS   1
 #define DMA_TRANSACTION_SIZE    512
 
+#define ADC_VREF	3.3f
+#define USB_VBUS_MIN_DETECT	4.8f
+#define USB_VBUS_NORMAL_DETECT	4.9f
+#define USB_VBUS_MIN_DETECT_DIV2 (USB_VBUS_MIN_DETECT/2.0f)
+#define USB_VBUS_NORMAL_DETECT_DIV2 (USB_VBUS_NORMAL_DETECT/2.0f)
+#define ADC_SAMPLE_MAX  4095U
+
+static const adcsample_t minUsbDiv2VoltageDetect =
+  (USB_VBUS_MIN_DETECT_DIV2 / ADC_VREF) * ADC_SAMPLE_MAX;
+
+static const adcsample_t normalUsbDiv2VoltageDetect =
+  (USB_VBUS_NORMAL_DETECT_DIV2 / ADC_VREF) * ADC_SAMPLE_MAX;
+
+static const uint32_t sampleDuration_us = 1e6f / (STM32_HCLK / 2 / 8 / 495);
+  
+
+
 static void  dmaReceiveCb(DMADriver *dmapRead, void *buffer, const size_t n);
 static void* dmaAskNextBufferCb(DMADriver *dmap, const size_t n);
 
@@ -45,6 +62,9 @@ static void blinker (void *arg)
     chThdSleepMilliseconds(1000);
   }
 }
+
+static THD_WORKING_AREA(waSpikeDetector, 384);
+static void spikeDetector (void *arg);
 
 // theses objects will manage a stream of a dma controller
 DMADriver dmapAdc1;
@@ -91,6 +111,7 @@ int main(void)
 
   // start the heartbeat task
   chThdCreateStatic(waBlinker, sizeof(waBlinker), NORMALPRIO, &blinker, NULL);
+  chThdCreateStatic(waSpikeDetector, sizeof(waSpikeDetector), LOWPRIO, &spikeDetector, NULL);
 
   // helper function that fill ADCConversionGroup : one shot mode
 
@@ -103,16 +124,7 @@ int main(void)
   // start the interractive shell
   consoleLaunch();  
 
-
-  fifo_dmaBuf_t *dmaBuf;
-  while (true) {
-    palToggleLine(LINE_LED1);
-    chFifoReceiveObjectTimeout(&fifo, (void **) &dmaBuf,  TIME_INFINITE);
-    // examine adc samples here
-    findVoltageSpike(dmaBuf);
-    chFifoReturnObject(&fifo, dmaBuf);
-  }
-
+  chThdSleep(TIME_INFINITE);
 }
 
 
@@ -154,17 +166,6 @@ static void* dmaAskNextBufferCb(DMADriver *dmap, const size_t n)
 }
 
 
-static void findVoltageSpike(const fifo_dmaBuf_t *samples)
-{
-  uint32_t sum=0;
-  static uint32_t count=0;
-  for (size_t i=0; i< DMA_TRANSACTION_SIZE; i++) {
-    sum += samples->dmabuf[i];
-  }
-  sum /= DMA_TRANSACTION_SIZE;
-  if ((count++  % 100) == 0)
-    DebugTrace("M(s) = %lu", sum);
-}
 
 
 
@@ -203,3 +204,44 @@ static void initAdc1()
 }
 
 
+static void spikeDetector (void *arg)
+{
+  (void)arg;
+  chRegSetThreadName("spikeDetector");
+  
+  while (true) {
+    fifo_dmaBuf_t *dmaBuf;
+    while (true) {
+      palToggleLine(LINE_LED1);
+      chFifoReceiveObjectTimeout(&fifo, (void **) &dmaBuf,  TIME_INFINITE);
+      // examine adc samples here
+      findVoltageSpike(dmaBuf);
+      chFifoReturnObject(&fifo, dmaBuf);
+    }
+  }
+}
+
+static void findVoltageSpike(const fifo_dmaBuf_t *samples)
+{
+  static bool inSpike = false;
+  static int  numberOfSampleInSpikeCondition = 0;
+
+  for (size_t i=0; i< DMA_TRANSACTION_SIZE; i++) {
+    if (inSpike == false) {
+      if (samples->dmabuf[i] < minUsbDiv2VoltageDetect) {
+	inSpike = true;
+	palSetLine(LINE_LED3);
+	numberOfSampleInSpikeCondition = 1U;
+      }
+    } else { // inSpike == true
+      if (samples->dmabuf[i] > normalUsbDiv2VoltageDetect)  {
+	palClearLine(LINE_LED3);
+	inSpike = false;
+	DebugTrace("detected spike of %.2f milliseconds",
+		   numberOfSampleInSpikeCondition * sampleDuration_us / 1000.0d);
+      } else {
+	numberOfSampleInSpikeCondition++;
+      }
+    }
+  }
+}
