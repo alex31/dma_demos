@@ -148,7 +148,7 @@ static void blinker (void *arg)
   
   while (true) {
     palToggleLine(LINE_LED1);
-    chThdSleepMilliseconds(1000);
+    chThdSleepMilliseconds(500);
   }
 }
 

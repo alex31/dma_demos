@@ -43,12 +43,15 @@ git clone --recursive https://github.com/alex31/dma_demos.git
 cd ~/dma_demos; git pull ; git submodule update
 ```
 
+
+## Démos correspondant à l'article de HACKABLE N° 36
+
 ### La première démo : un chenillard avec les 4 LEDs soudées sur la carte discoveryF4. 
 - Une tâche fait périodiquement flasher les 4 leds d'un coup à 1Hz.
 - Après un appui sur le bouton USER bleu, Chibios est stoppé
 - le flash périodique s'arrète, mais le DMA continue d'animer le chenillard sans intervention du CPU qui est arreté.
 ``` shell
-cd dma_demos/led_blink; make -j4
+cd dma_demos/disco_led_blink; make -j4
 ```
 >brancher la carte, monter le disque USB DIS_F407VG, puis flasher le binaire :
 ``` shell
@@ -59,7 +62,7 @@ cp build/ch.bin /mnt/media/xxx/DIS_F407VG
 - Le pgm commence par faire de l'acquisition one shot
 - après un appui sur le bouton USER bleu : fait de l'acquisition continue :
 ``` shell
-cd ../adc; make -j4
+cd ../disco_adc; make -j4
 ```
 - brancher la carte, monter le disque USB DIS_F407VG
 - flasher le binaire : si dans une machine virtuelle : transferer la sonde de prog vers la machine virtuelle : menu VM -> Removable Device ->STMicroelectronics STM32 STLink -> Connect 
@@ -72,7 +75,7 @@ screen /dev/ttyACM0 115200
 ```
 ### la troisieme démo lit une UART
 ``` shell
-cd ../continuous_uart; make -j4
+cd ../disco_continuous_uart; make -j4
 ```
 - brancher la carte
 - monter le disque USB DIS_F407VG, puis flasher le binaire : si dans une machine virtuelle : transferer la sonde de prog vers la machine virtuelle : menu VM -> Removable Device ->STMicroelectronics STM32 STLink -> Connect 
@@ -87,7 +90,7 @@ cp build/ch.bin /mnt/media/xxx/DIS_F407VG
 
 ### la quatrieme demo pilote des LEDs WS2812
 ``` shell
-cd ../ws2812_strip; make -j4
+cd ../disco_ws2812_strip; make -j4
 ```
 - brancher la carte, monter le disque USB DIS_F407VG, puis flasher le binaire 
 - si dans une machine virtuelle : transferer la sonde de prog vers la machine virtuelle :
@@ -103,3 +106,24 @@ cp build/ch.bin /mnt/media/xxx/DIS_F407VG
 screen /dev/ttyACM0 115200
 ```
 > vous pouvez ajuster la taille du LEDSTRIP dans le fichier source, en editant la valeur de la macro  STRIP_NB_LEDS
+
+
+## Démos correspondant à l'article de HACKABLE N° 38
+
+### La première démo : 
+- Un benchmark des performances de copie mémoire, en fonction de la taille du segment copié
+  
+- Après un appui sur le bouton USER bleu, un benchmark est lancé sur un système sans charge et les performances sont affichées sur le terminal connecté par la sonde de programmation à la liaison série du MCU.
+- Après un second appui sur le bouton USER bleu, un benchmark est lancé sur un système très chargé à la fois au niveau CPU et au niveau transactions sur les bus mémoire. Les performances sont affichées sur le terminal connecté par la sonde de programmation à la liaison série du MCU.
+
+``` shell
+cd dma_demos/disco_memory_copy; make -j4
+```
+>brancher la carte, monter le disque USB DIS_F407VG, puis flasher le binaire :
+``` shell
+cp build/ch.bin /mnt/media/xxx/DIS_F407VG
+```
+> lancer un terminal pour lire la sortie de debug sur les résultats des benchmarks
+``` shell
+screen /dev/ttyACM0 115200
+
