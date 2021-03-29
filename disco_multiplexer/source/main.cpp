@@ -29,7 +29,8 @@ volatile static rtcnt_t dmaTransactionDuration = 0U;
 
 uint8_t * const muxInput1 = (uint8_t *) &GPIOB->IDR;
 uint8_t * const muxInput2 = ((uint8_t *) &GPIOB->IDR) + 1;
-const auto muxOutput = &GPIOD->ODR;
+uint8_t * const muxOutput = ((uint8_t *) &GPIOD->ODR) + 1;
+
 const std::array muxInputs = {muxInput1, muxInput2};
 
 static const DMAConfig dmaConfig = {
@@ -62,11 +63,23 @@ static void blinker (void *arg)
   chRegSetThreadName("blinker");	
   
   while (true) {			
-    palToggleLine(LINE_LED1);	
+    palToggleLine(LINE_BLK_1);	
     chThdSleepMilliseconds(500);
     const uint32_t dtdUs = RTC2US(STM32_SYSCLK, dmaTransactionDuration);
     const float copyBySecond =  (1e6/dtdUs) * DMA_TRANSACTION_LEN;
     DebugTrace("%.2f * 10^6 copy/s", copyBySecond / 1e6);
+  }
+}
+
+static THD_WORKING_AREA(waBlinker2, 304);
+static void blinker2 (void *arg)		
+{
+  (void)arg;				
+  chRegSetThreadName("blinker2");	
+  
+  while (true) {			
+    palToggleLine(LINE_BLK_2);	
+    chThdSleepMilliseconds(100);
   }
 }
    
@@ -88,9 +101,10 @@ int main (void)
 
   consoleLaunch();  // lancement du shell
 
-  currentIndex = palReadLine(LINE_BLUE_BUTTON) == PAL_LOW ? 1 : 0;
+  currentIndex = 0;
   dmaStartTransfert(&dmap, muxInputs[currentIndex], (void*) muxOutput, 65534);
   chThdCreateStatic(waBlinker, sizeof(waBlinker), NORMALPRIO+2, &blinker, NULL);
+  chThdCreateStatic(waBlinker2, sizeof(waBlinker2), NORMALPRIO+2, &blinker2, NULL);
 
   // main thread does nothing
   chThdSleep(TIME_INFINITE);
@@ -107,7 +121,7 @@ static void end_cb(DMADriver *dmadp, void *buffer, const size_t n)
   ts = now;
 
   chSysLockFromISR();
-  const size_t index = palReadLine(LINE_BLUE_BUTTON) == PAL_LOW ? 1 : 0;
+  const size_t index = palReadLine(LINE_BLUE_BUTTON) == PAL_LOW ? 0 : 1;
    
   if (index != currentIndex) {
     currentIndex = index;
