@@ -38,7 +38,7 @@ else
 endif
 
 ifeq ($(USE_OPT),) 
-  USE_OPT =  -Og -ggdb3  -Wall -Wextra \
+  USE_OPT =  -O0 -ggdb3  -Wall -Wextra \
 	    -falign-functions=16 -fomit-frame-pointer \
 	    $(GCC_DIAG) -DCH_DBG_ENABLE_ASSERTS=1
 endif
@@ -151,7 +151,8 @@ include $(CHIBIOS)/tools/mk/autobuild.mk
 
 
 # Define linker script file here
-LDSCRIPT= $(CONFDIR)/STM32F76xxI_sram2_no_cache.ld
+#LDSCRIPT= $(CONFDIR)/STM32F76xxI_sram2_no_cache.ld
+LDSCRIPT= ${STARTUPLD}/STM32F76xxI.ld
 
 
 
