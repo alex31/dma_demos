@@ -103,9 +103,10 @@ static void blinker (void *arg)
 #define BENCH_REPEAT 100
 #define MEMORY_LEN 1024U
 static const uint32_t source[MEMORY_LEN] = {[0 ... MEMORY_LEN-1] = 0xFF00};
-//uint32_t dest[MEMORY_LEN] = {0};
-uint32_t dest[MEMORY_LEN] __attribute__ ((section("NOCACHE_RAM"), aligned(8)));
-//uint32_t dest[MEMORY_LEN] __attribute__ ((section("DATA_RAM")));
+//uint32_t dest[MEMORY_LEN] = {0}; // works (.ram3 by default)
+uint32_t dest[MEMORY_LEN] __attribute__ ((section(".ram0"))); // cached ram : do not work
+//uint32_t dest[MEMORY_LEN] __attribute__ ((section(".ram3"))); // also works
+
 
 
 _Static_assert(sizeof(source) == sizeof(dest),

@@ -206,15 +206,13 @@ static void spikeDetector (void *arg)
   (void)arg;
   chRegSetThreadName("spikeDetector");
   
+  fifo_dmaBuf_t *dmaBuf;
   while (true) {
-    fifo_dmaBuf_t *dmaBuf;
-    while (true) {
-      palToggleLine(LINE_LED1);
-      chFifoReceiveObjectTimeout(&fifo, (void **) &dmaBuf,  TIME_INFINITE);
-      // examine adc samples here
-      findVoltageSpike(dmaBuf);
-      chFifoReturnObject(&fifo, dmaBuf);
-    }
+    palToggleLine(LINE_LED1);
+    chFifoReceiveObjectTimeout(&fifo, (void **) &dmaBuf,  TIME_INFINITE);
+    // examine adc samples here
+    findVoltageSpike(dmaBuf);
+    chFifoReturnObject(&fifo, dmaBuf);
   }
 }
 
