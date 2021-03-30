@@ -26,15 +26,18 @@ DEVBM_HSE_MHZ := 16
 DISCO_HSE_MHZ := 8
 
 
-GCCVERSIONGTEQ7 := $(shell expr `arm-none-eabi-gcc -dumpversion | cut -f1 -d.` \>= 7)
+GCCVERSIONGTEQ10 := $(shell expr `arm-none-eabi-gcc -dumpversion | cut -f1 -d.` \>= 10)
 GCC_DIAG =  -Werror -Wno-error=unused-variable -Wno-error=format \
-            -Wno-error=cpp -Wno-error=volatile \
+            -Wno-error=cpp  \
             -Wno-error=unused-function \
             -Wunused -Wpointer-arith \
             -Werror=sign-compare \
             -Wshadow -Wparentheses -fmax-errors=5 \
             -ftrack-macro-expansion=2 -Wno-error=strict-overflow -Wstrict-overflow=2
 
+ifeq "$(GCCVERSIONGTEQ10)" "1"
+GCC_DIAG += -Wno-error=volatile
+endif
 
 ifeq ($(EXECMODE),$(DEBUG)) 
   USE_OPT =  -O0  -ggdb3  -Wall -Wextra \
@@ -66,7 +69,12 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++20 -Wno-volatile -fno-rtti -fno-exceptions -fno-threadsafe-statics
+  USE_CPPOPT = -fno-rtti -fno-exceptions -fno-threadsafe-statics
+endif
+ifeq "$(GCCVERSIONGTEQ10)" "1"
+USE_CPPOPT += -std=c++20 -Wno-volatile
+else
+USE_CPPOPT += -std=c++2a  
 endif
 
 # Enable this if you want the linker to remove unused code and data
